@@ -58,7 +58,7 @@ Your site is live at https://<你的用户名>.github.io/solo-leveling/
 ## 方案 B：装了 Git 之后
 
 ```powershell
-cd "F:\deep seek\ppt生成\quest"
+cd "<你的 quest 文件夹路径>"
 
 git init
 git add .

@@ -787,7 +787,7 @@
           '<span class="badge ' + (cl ? 'done' : (s.side ? 'side' : 'now')) + '">' + (cl ? '已通关' : (s.side ? '副线' : '进行中')) + '</span>' +
           '<span>' + s.duration + '</span>' +
           (s.hours ? '<span>约 ' + s.hours + ' 小时</span>' : '') +
-          (ex && ex.best != null ? '<span>最高分 ' + ex.best + '/' + s.exam.q.length + '</span>' : '') +
+          (ex && ex.best != null ? '<span>最高分 ' + (Number(ex.best) || 0) + '/' + s.exam.q.length + '</span>' : '') +
           '<button class="sh-link" id="copyLink" title="复制这一关的链接" aria-label="复制链接">🔗</button>' +
         '</div>' +
       '</div>' +
@@ -1276,7 +1276,7 @@
       var cls = 'heatmap-cell';
       if (rec) cls += ' l4';
       if (k === todayKey()) cls += ' today';
-      cells += '<i class="' + (rec ? 'l4' : '') + (k === todayKey() ? ' today' : '') + '" title="' + k + (rec ? ' · +' + rec.xp + ' EXP' : '') + '"></i>';
+      cells += '<i class="' + (rec ? 'l4' : '') + (k === todayKey() ? ' today' : '') + '" title="' + k + (rec ? ' · +' + (Math.round(Number(rec.xp)) || 0) + ' EXP' : '') + '"></i>';
     }
     box.innerHTML = cells;
   }
@@ -1427,6 +1427,8 @@
       if (!p || !p.worlds) { toast('这不是一个有效存档', 'bad'); return; }
       S = p;
       if (!S.player) S.player = { name: '无名猎人' };
+      /* 存档是外部输入：名字只保留纯文本，防止导入恶意 JSON 时注入 */
+      S.player.name = String(S.player.name || '无名猎人').replace(/[<>"'&]/g, '').slice(0, 12) || '无名猎人';
       if (!S.checkins) S.checkins = {};
       if (!S.ach) S.ach = {};
       if (!S.settings) S.settings = { sound: true };
