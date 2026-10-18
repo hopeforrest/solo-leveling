@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>我独自升级 · 学习系统</title>
+<meta name="description" content="把我的成长变成一场升级：四条世界线、关卡任务、每日任务、考核与等级。">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<svg class="svg-defs" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="gHair" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#60a5fa"/><stop offset="1" stop-color="#2563eb"/>
+    </linearGradient>
+    <linearGradient id="gTail" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7dd3fc"/><stop offset="1" stop-color="#0284c7"/>
+    </linearGradient>
+    <linearGradient id="gBtn" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#a78bfa"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 引导角色：蓝汐（大肥鱼）蓝发 · 鲸尾 · 女仆 -->
+  <symbol id="mascot" viewBox="0 0 200 200">
+    <!-- 后发 -->
+    <ellipse cx="100" cy="90" rx="74" ry="62" fill="url(#gHair)"/>
+    <!-- 脸 -->
+    <ellipse cx="100" cy="110" rx="45" ry="43" fill="#ffe3cf"/>
+    <!-- 刘海 -->
+    <circle cx="70" cy="84" r="20" fill="#3b82f6"/>
+    <circle cx="92" cy="77" r="22" fill="#3b82f6"/>
+    <circle cx="116" cy="79" r="21" fill="#3b82f6"/>
+    <circle cx="137" cy="89" r="18" fill="#3b82f6"/>
+    <!-- 侧发 -->
+    <ellipse cx="47" cy="120" rx="12" ry="33" fill="#2563eb" transform="rotate(-6 47 120)"/>
+    <ellipse cx="153" cy="120" rx="12" ry="33" fill="#2563eb" transform="rotate(6 153 120)"/>
+    <!-- 女仆头饰 -->
+    <rect x="62" y="50" width="76" height="10" rx="5" fill="#f8fafc"/>
+    <circle cx="100" cy="48" r="7.5" fill="#f8fafc"/>
+    <circle cx="100" cy="48" r="3" fill="#93c5fd"/>
+    <!-- 鲸尾发夹 -->
+    <path d="M134 48 C142 41 151 40 156 45 C150 47 148 51 149 56 C145 50 139 48 134 48 Z" fill="url(#gTail)"/>
+    <!-- 眼睛 -->
+    <ellipse cx="82" cy="124" rx="9.5" ry="12" fill="#1e3a8a"/>
+    <ellipse cx="118" cy="124" rx="9.5" ry="12" fill="#1e3a8a"/>
+    <circle cx="85" cy="120" r="3.4" fill="#fff"/>
+    <circle cx="121" cy="120" r="3.4" fill="#fff"/>
+    <circle cx="79" cy="129" r="1.8" fill="#93c5fd"/>
+    <circle cx="115" cy="129" r="1.8" fill="#93c5fd"/>
+    <!-- 腮红 / 嘴 -->
+    <ellipse cx="66" cy="138" rx="7" ry="4.5" fill="#fda4af" opacity=".5"/>
+    <ellipse cx="134" cy="138" rx="7" ry="4.5" fill="#fda4af" opacity=".5"/>
+    <path d="M94 142 Q100 148 106 142" stroke="#e07a5f" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  </symbol>
+
+  <symbol id="icon-lock" viewBox="0 0 24 24">
+    <path d="M7 10V8a5 5 0 0 1 10 0v2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <rect x="4.5" y="10" width="15" height="10.5" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/>
+  </symbol>
+  <symbol id="icon-check" viewBox="0 0 24 24">
+    <path d="M4 13l5.5 5.5L20 6.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+</svg>
+
+<div class="bg" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid"></div>
+  <div class="noise"></div>
+</div>
+
+<header class="hud">
+  <div class="hud-id">
+    <div class="avatar"><span class="avatar-ring"></span><svg><use href="#mascot"/></svg></div>
+    <div class="id-text">
+      <div class="id-name">我独自升级 <em>SOLO</em></div>
+      <div class="id-title"><span id="playerName">无名猎人</span><span class="sep">/</span><span id="playerTitle">E 级猎人</span><span class="sep">/</span><b id="playerLv">Lv.1</b></div>
+    </div>
+  </div>
+
+  <div class="hud-bar">
+    <div class="bar-meta"><span>EXP</span><span id="expNum">0 / 100</span></div>
+    <div class="bar"><i id="expFill"></i></div>
+  </div>
+
+  <div class="hud-stats">
+    <div class="stat"><b id="statStreak">0</b><span>COMPO</span></div>
+    <div class="stat"><b id="statClear">0</b><span>CLEAR</span></div>
+    <div class="stat"><b id="statTask">0</b><span>QUEST</span></div>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="tab is-on" data-view="map"><b>地图</b><span>MAP</span></button>
+  <button class="tab" data-view="sprint"><b>里程碑</b><span>MILESTONE</span></button>
+  <button class="tab" data-view="intel"><b>情报</b><span>INTEL</span></button>
+  <button class="tab" data-view="checkin"><b>报到</b><span>DIARY</span></button>
+  <button class="tab" data-view="ach"><b>成就</b><span>TROPHY</span></button>
+  <button class="tab" data-view="save"><b>存档</b><span>SAVE</span></button>
+</nav>
+
+<main class="main">
+
+  <section class="view is-on" id="view-map">
+    <div class="worlds" id="worlds"></div>
+    <div class="world-head" id="worldHead"></div>
+    <div id="todayCard"></div>
+    <div class="map" id="map"></div>
+  </section>
+
+  <section class="view" id="view-sprint">
+    <div class="panel">
+      <div class="panel-head"><h2>四条线 · 里程碑</h2><span>MILESTONES</span></div>
+      <p class="muted">每过一关，你都会变成一个不同的人。点一条线，看它的时间、每阶段能做到什么、以及终点的你。</p>
+      <div class="line-overview" id="lineOverview"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>人生进度表</h2><span>4 LANES · 按当前节奏</span></div>
+      <p class="muted">横轴是月。四条线并行推进——这就是你未来两年的形状。点任意一段可以看到那一关。</p>
+      <div class="gantt-wrap"><div class="gantt" id="gantt"></div></div>
+      <p class="hint">每段的长度 = 该关预计耗时。磨刀只有 2–3 周，所以只是最左边一小条，悬停能看到它是哪一关。</p>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2 id="msTitle">计算机线</h2><span id="msSub">—</span></div>
+      <div class="mode-row" id="modeRow"></div>
+      <div class="pace-row" id="paceRow"></div>
+      <div class="ms-timeline" id="msTimeline"></div>
+    </div>
+
+    <div class="panel final-panel">
+      <div class="final-tag">完成之后 · 这条线的你</div>
+      <div class="final-who" id="finalWho">…</div>
+      <p class="final-note" id="finalNote"></p>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>每关最短闭环</h2><span>SHORTEST PATH</span></div>
+      <div id="fastTable"></div>
+    </div>
+  </section>
+
+  <section class="view" id="view-intel">
+    <div class="panel">
+      <div class="panel-head"><h2>每周情报</h2><span id="intelWeek">—</span></div>
+      <p class="muted" id="intelDesc"></p>
+      <div class="task-bar" style="margin-top:16px">
+        <div class="bar"><i id="intelFill"></i></div><b id="intelNum">0 / 4</b>
+      </div>
+      <div class="tasks" id="intelWeekly"></div>
+      <p class="hint" id="intelStat"></p>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>信息源</h2><span>SOURCES</span></div>
+      <p class="muted">从下往上，频率越来越低，价值越来越高。</p>
+      <div id="intelSrc" style="margin-top:14px"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>三问筛子</h2><span>FILTER</span></div>
+      <div id="intelFilter"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>噪音清单</h2><span>NOISE</span></div>
+      <ul class="sh-list warn" id="intelNoise"></ul>
+    </div>
+  </section>
+
+  <section class="view" id="view-checkin">
+    <div class="panel">
+      <div class="panel-head"><h2>每日报到</h2><span>DAILY LOG</span></div>
+      <div class="checkin-top">
+        <div class="checkin-cta">
+          <p class="muted">每天报到一次，拿 EXP。断三天就断连击，别让它发生。</p>
+          <button class="btn btn-main" id="checkinBtn">今天也来了</button>
+          <p class="hint" id="checkinHint"></p>
+        </div>
+        <div class="streak-box">
+          <div class="streak-num" id="streakNum">0</div>
+          <div class="streak-label">连击天数</div>
+          <div class="streak-best" id="streakBest">最长 0 天</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h2>最近 13 周</h2><span>HEATMAP</span></div>
+      <div class="heatmap-wrap"><div class="heatmap" id="heatmap"></div></div>
+    </div>
+  </section>
+
+  <section class="view" id="view-ach">
+    <div class="panel">
+      <div class="panel-head"><h2>成就</h2><span id="achCount">0 / 0</span></div>
+      <div class="ach-grid" id="achGrid"></div>
+    </div>
+  </section>
+
+  <section class="view" id="view-save">
+    <div class="panel">
+      <div class="panel-head"><h2>存档</h2><span>SAVE DATA</span></div>
+      <label class="field"><span>旅人名</span><input id="nameInput" maxlength="12" placeholder="无名旅人"></label>
+      <label class="field switch-row"><span>音效</span><input type="checkbox" id="soundToggle"></label>
+      <div class="save-actions">
+        <button class="btn" id="exportBtn">导出存档</button>
+        <button class="btn" id="importBtn">导入存档</button>
+        <button class="btn btn-danger" id="resetBtn">清空重来</button>
+      </div>
+      <textarea id="saveBox" class="save-box" spellcheck="false" placeholder="这里会显示存档 JSON。导出 = 复制它；导入 = 粘贴后点导入。"></textarea>
+      <p class="hint">进度存在浏览器本地（localStorage）。换浏览器、清缓存会丢，记得导出。</p>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h2>规则</h2><span>RULES</span></div>
+      <ul class="rules">
+        <li>任务全部勾选后，才能进入<b>考核</b>。</li>
+        <li>考核 <b>答对 3/4（或 2/3）</b> 判定合格，合格才解锁下一关。</li>
+        <li>素养线三关<b>并行</b>，互不锁定；创作线是串行的。</li>
+        <li>等级只是记分牌，作品才是底气。</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-fish"><svg class="mini"><use href="#mascot"/></svg></div>
+  <p class="fish-line" id="fishLine">……</p>
+</footer>
+
+<div class="sheet-wrap" id="sheetWrap" hidden>
+  <div class="scrim" data-close="1"></div>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
+</div>
+
+<div class="exam-wrap" id="examWrap" hidden></div>
+
+<div class="toasts" id="toasts"></div>
+<div class="levelup" id="levelup" hidden></div>
+
+<div class="titleget" id="titleGet" hidden>
+  <div class="tg-box">
+    <div class="tg-kicker">TITLE ACQUIRED</div>
+    <div class="tg-rank" id="tgRank"></div>
+    <div class="tg-stage" id="tgStage"></div>
+    <div class="tg-cap" id="tgCap"></div>
+    <div class="tg-sweep"></div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="content.js"></script>
+<script src="worlds2.js"></script>
+<script src="milestones.js"></script>
+<script src="route.js"></script>
+<script src="intel.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
