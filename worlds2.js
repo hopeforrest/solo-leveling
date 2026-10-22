@@ -410,6 +410,7 @@ window.SEE = {
   'dm3:0': 'ComfyUI 文档 custom nodes', 'dm3:1': 'sd-scripts README', 'dm3:2': 'ComfyUI /prompt 文档',
   'dm3:3': 'AnimateDiff README', 'dm3:4': '3DGS 项目 README', 'dm3:5': '不用看',
   'dm3:6': '不用看', 'dm3:7': 'Blender Passes 文档', 'dm3:8': 'PS 官方 · 蒙版/曲线', 'dm3:9': '不用看',
+  'dm3:10': 'Git LFS 官网 · 安装与 track 用法', 'dm3:11': '不用看，先把手上的图参数补全',
   'dm4:0': 'FastAPI 部署文档', 'dm4:1': '不用看', 'dm4:2': '不用看',
   'dm4:3': 'locust 入门', 'dm4:4': '不用看', 'dm4:5': '不用看',
   'dm4:6': '达芬奇官方培训 Color 第 1–3 课', 'dm4:7': '达芬奇 · 色彩管理',

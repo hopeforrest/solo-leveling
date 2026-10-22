@@ -168,6 +168,7 @@ window.GAME_EXTRA = {
       '视频：首尾帧 + RIFE / FILM 插帧解决闪烁',
       '3D：图生 3D、3DGS 训练、减面与重拓扑',
       'Blender：导出深度 / 法线 / 分割 / OpenPose',
+      '资源管理：目录与命名、版本管理（Git LFS / DVC）、素材库、生成参数记录',
       '成本核算：每张图、每秒视频多少钱'
     ],
     resources: [
@@ -175,7 +176,9 @@ window.GAME_EXTRA = {
       { t: 'ControlNet', u: 'https://github.com/lllyasviel/ControlNet', k: '工具', n: '看懂条件是怎么注入的' },
       { t: 'ComfyUI Manager', u: 'https://github.com/ltdrdata/ComfyUI-Manager', k: '工具', n: '发布节点的入口' },
       { t: '3DGS 官方实现', u: 'https://github.com/graphdeco-inria/gaussian-splatting', k: '论文', n: '3DGS 从这里开始' },
-      { t: 'Wan2.1（开源视频生成）', u: 'https://github.com/Wan-Video/Wan2.1', k: '工具', n: '能本地跑的视频模型' }
+      { t: 'Wan2.1（开源视频生成）', u: 'https://github.com/Wan-Video/Wan2.1', k: '工具', n: '能本地跑的视频模型' },
+      { t: 'Git LFS', u: 'https://git-lfs.com/', k: '工具', n: '大文件（模型/素材）不进普通 Git' },
+      { t: 'Eagle', u: 'https://eagle.cool/', k: '工具', n: '素材库：标签检索，比文件夹强' }
     ]
   },
   dm4: {

@@ -343,7 +343,8 @@ window.GAME_DATA = {
             '音频：Suno、MMAudio、TTS（CosyVoice、GPT-SoVITS）',
             '3D：Tripo / Meshy / Hunyuan3D、3DGS 训练（gsplat / nerfstudio）',
             'Blender 数据工厂：建模、相机、渲染 Pass、OpenPose 骨架',
-            'PS 补刀：蒙版、曲线、通道、局部重绘、数据集清洗'
+            'PS 补刀：蒙版、曲线、通道、局部重绘、数据集清洗',
+            '资源管理：目录与命名、版本（Git LFS / DVC）、素材库（Eagle）、生成参数记录'
           ],
           tasks: [
             '发布过一个 ComfyUI 自定义节点（GitHub 公开，有 README，别人装得上）',
@@ -355,7 +356,9 @@ window.GAME_DATA = {
             '能算清你的管线每张图、每秒视频的成本',
             '能从 Blender 导出深度 + 法线，驱动一次精确构图的 ControlNet 生成',
             '能用 PS 把一张 AI 图修到「看不出 AI 味」',
-            '能用 PS 清洗一个 30 张以上的训练数据集'
+            '能用 PS 清洗一个 30 张以上的训练数据集',
+            '给项目建一套目录与命名规则（项目 / 素材 / 输出），并写进 README',
+            '把生成参数（prompt / seed / 模型 / LoRA）记进 CSV，能复现任意一张图'
           ],
           donts: ['别只存别人的 workflow', '别追新模型追到停不下来', '别只做图，钱在视频和 3D', '别把「跑通一次」当成功', '别在整合包上纠结'],
           reward: '你手上有一条「生产线的图纸」。这比会 100 个提示词值钱一百倍。',
