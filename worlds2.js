@@ -368,6 +368,11 @@ window.BILI_EXTRA = {
     { t: 'B站 · GAMES101 计算机图形学', u: 'https://search.bilibili.com/all?keyword=GAMES101', k: 'B站', n: '闫令琪，只看前 8 讲' },
     { t: 'B站 · Shader 入门（GLSL）', u: 'https://search.bilibili.com/all?keyword=Shader%20%E5%85%A5%E9%97%A8%20GLSL', k: 'B站', n: '配合 Book of Shaders 一起看' }
   ],
+  dmai: [
+    { t: 'B站 · Ollama 本地部署大模型', u: 'https://search.bilibili.com/all?keyword=Ollama%20%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2', k: 'B站', n: '看到「能跑 7B」就停，别刷完整套' },
+    { t: 'B站 · DeepSeek API 调用实战', u: 'https://search.bilibili.com/all?keyword=DeepSeek%20API%20%E8%B0%83%E7%94%A8', k: 'B站', n: '重点看 messages 结构和流式输出' },
+    { t: 'B站 · RAG 知识库搭建', u: 'https://search.bilibili.com/all?keyword=RAG%20%E7%9F%A5%E8%AF%86%E5%BA%93%20%E6%90%AD%E5%BB%BA', k: 'B站', n: '看「切片 + 检索」那一段，别只看界面' }
+  ],
   dmb: [
     { t: 'B站 · 达芬奇调色实战', u: 'https://search.bilibili.com/all?keyword=%E8%BE%BE%E8%8A%AC%E5%A5%87%20%E8%B0%83%E8%89%B2', k: 'B站', n: '跟调一条片子，比看十节课有用' },
     { t: 'B站 · Blender 渲染分层导出', u: 'https://search.bilibili.com/all?keyword=Blender%20%E6%B8%B2%E6%9F%93%20%E5%88%86%E5%B1%82', k: 'B站', n: '重点看 Passes 与合成' }
@@ -410,6 +415,10 @@ window.SEE = {
   'dm4:6': '达芬奇官方培训 Color 第 1–3 课', 'dm4:7': '达芬奇 · 色彩管理',
   'dm5:0': '不用看', 'dm5:1': '不用看', 'dm5:2': 'Google eng-practices', 'dm5:3': '不用看',
   'dm5:4': '不用看', 'dm5:5': '不用看',
+  'dmai:0': 'DeepSeek 文档 · 快速开始', 'dmai:1': 'Ollama README · 先跑通 7B',
+  'dmai:2': 'HF Agents 课 Unit 1', 'dmai:3': 'sd-scripts README（LoRA 同一套思路）',
+  'dmai:4': 'Lilian Weng · Agent 综述', 'dmai:5': 'DeepInfer README',
+  'dm1:6': 'DeepSeek 文档 · 第一次调用', 'dm4:8': 'DeepInfer README',
   'dma:0': 'GAMES101 L1–L4', 'dma:1': 'Book of Shaders 01–06',
   'dma:2': '达芬奇 色彩空间文档', 'dma:3': 'Blender Passes + ControlNet depth', 'dma:4': '3DGS 论文摘要',
   'dmb:0': 'PS 教程 · 蒙版/曲线', 'dmb:1': '达芬奇培训 Color 第 1–3 课',
@@ -457,6 +466,7 @@ window.SKIN = {
       '[系统] 成长不是线性的，但中断是。',
       '[系统] 建议：先完成今天的最小任务。',
       '[系统] 记录已保存。继续。',
+      '[系统] 提示：DeepInfer 已开源。引擎给所有人，成本是硬道理。',
       '[系统] 检测到拖延行为。是否接受惩罚任务？'
     ],
     examPass: ['[系统] 考核通过。已解锁下一区域。', '[系统] 能力确认。继续前进。', '[系统] 你变强了，但还不够。'],
@@ -503,6 +513,7 @@ window.SKIN = {
   /* 新成就 */
   D.achievements.push(
     { id: 'edu_all', name: '素养成型', desc: '素养线三关全部通关', icon: '🧭', key: 'eduall' },
-    { id: 'create_first', name: '第一个作品', desc: '创作线通关任意一关', icon: '🎬', key: 'create1' }
+    { id: 'create_first', name: '第一个作品', desc: '创作线通关任意一关', icon: '🎬', key: 'create1' },
+    { id: 'dmai_clear', name: 'AI 觉醒', desc: '数媒线「LLM 与 Agent」通关', icon: '🤖', key: 'dmai' }
   );
 })();

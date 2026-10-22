@@ -126,6 +126,7 @@ window.GAME_EXTRA = {
     content: [
       'Python 基础 + numpy / PIL / opencv 读写图像',
       'argparse：把脚本变成「能带参数跑」的小工具',
+      '调大模型 API：requests 发 messages，key 放环境变量',
       '调 diffusers：换模型、换提示词、循环 seed 批量出图',
       '批量出图 + 自动命名 + 参数写进 CSV',
       'API Key 与环境变量：别写死在代码里'
@@ -133,7 +134,8 @@ window.GAME_EXTRA = {
     resources: [
       { t: 'Diffusers 文档', u: 'https://huggingface.co/docs/diffusers', k: '文档', n: '按需查，不要通读' },
       { t: 'Automate the Boring Stuff', u: 'https://automatetheboringstuff.com/', k: '书', n: '写小工具的最快路径' },
-      { t: 'Hugging Face 课程总入口', u: 'https://huggingface.co/learn', k: '课', n: 'NLP / Diffusion / Agents 都有' }
+      { t: 'Hugging Face 课程总入口', u: 'https://huggingface.co/learn', k: '课', n: 'NLP / Diffusion / Agents 都有' },
+      { t: 'DeepSeek API 文档', u: 'https://api-docs.deepseek.com/', k: '文档', n: '免费额度足够跑通第一个小工具' }
     ]
   },
   dm2: {
@@ -185,14 +187,36 @@ window.GAME_EXTRA = {
       'fp8 / int4、xformers、TensorRT 的取舍',
       '并发与排队：显存决定你的吞吐上限',
       '成本核算：元 / 张、元 / 秒，以及怎么压下来',
+      'LLM 服务化：Ollama / DeepInfer / vLLM，吞吐与单次成本核算',
       '达芬奇：ACES、Log → Rec709、多源素材一致性调色'
     ],
     resources: [
       { t: 'Gradio 快速开始', u: 'https://www.gradio.app/guides/quickstart', k: '工具', n: '一晚上做出能点的界面' },
       { t: 'Diffusers 显存优化', u: 'https://huggingface.co/docs/diffusers/optimization/fp16', k: '文档', n: 'fp16 / offload / 量化都在这里' },
-      { t: '达芬奇官方培训', u: 'https://www.blackmagicdesign.com/products/davinciresolve/training', k: '课', n: '免费 PDF + 练习素材' }
+      { t: '达芬奇官方培训', u: 'https://www.blackmagicdesign.com/products/davinciresolve/training', k: '课', n: '免费 PDF + 练习素材' },
+      { t: 'DeepInfer', u: 'https://github.com/deepseek-ai/DeepInfer', k: '工具', n: '部署 LLM 服务时，先跑 README 示例' }
     ]
   },
+  dmai: {
+    hours: 70,
+    fast: '调通一次 API + 本地跑通 7B + 做一个 RAG 问答。三件做完再谈微调。',
+    content: [
+      '大模型怎么工作：token、上下文窗口、预训练 / 后训练、推理模式',
+      'API 调用：messages 结构、temperature、stream、function calling',
+      'RAG：文档切片、embedding 检索、重排、引用溯源',
+      'Agent：工具定义、多步规划、失败重试、MCP',
+      '本地部署：Ollama、GGUF / int4 量化、显存估算',
+      '推理框架：DeepInfer / vLLM 的吞吐、延迟与成本换算'
+    ],
+    resources: [
+      { t: 'DeepSeek 开放平台文档', u: 'https://api-docs.deepseek.com/', k: '文档', n: '有免费额度，先跑通一次对话与流式输出' },
+      { t: 'Ollama', u: 'https://ollama.com/', k: '工具', n: '一行命令在本地跑 7B，先体验再说' },
+      { t: 'DeepInfer（DeepSeek 开源推理框架）', u: 'https://github.com/deepseek-ai/DeepInfer', k: '工具', n: '2026 年 10 月开源，兼容 NVIDIA 与昇腾' },
+      { t: 'Hugging Face Agents 课程', u: 'https://huggingface.co/learn/agents-course', k: '课', n: '带代码，Agent 入门最省时间' },
+      { t: 'Lilian Weng · LLM Powered Autonomous Agents', u: 'https://lilianweng.github.io/posts/2023-06-23-agent/', k: '文', n: '把 Agent 的规划 / 记忆 / 工具讲透' }
+    ]
+  },
+
   dm5: {
     hours: 90,
     fast: '读一个大项目 + 讲一次 30 分钟。剩下的边工作边补。',

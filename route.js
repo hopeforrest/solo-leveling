@@ -15,8 +15,8 @@ window.ROUTE = {
     },
     {
       id: 'p2', name: 'P2 · 造管线',
-      stages: ['dm3', 'dma'],
-      why: 'dm3 要导 Blender Pass，顺手把「眼睛」补上——两件事一起做，不额外花时间。'
+      stages: ['dm3', 'dmai', 'dma'],
+      why: 'dm3 造图与视频的管线，dmai 把大模型与 Agent 接进来；dma 顺手补「眼睛」——三件事一起做，不额外花时间。'
     },
     {
       id: 'p3', name: 'P3 · 补工程',

@@ -1316,7 +1316,8 @@
       eduall: ['e1', 'e2', 'e3'].every(function (id) {
         return !!(S.worlds.edu && S.worlds.edu.cleared[id]);
       }),
-      create1: !!(S.worlds.create && Object.keys(S.worlds.create.cleared).length > 0)
+      create1: !!(S.worlds.create && Object.keys(S.worlds.create.cleared).length > 0),
+      dmai: !!(S.worlds.dm && S.worlds.dm.cleared.dmai)
     };
   }
 

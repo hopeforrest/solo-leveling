@@ -27,7 +27,9 @@ window.INTEL = {
         { t: 'Hugging Face 博客', u: 'https://huggingface.co/blog', n: '新模型、新库的官方发布都在这里' },
         { t: 'Papers with Code', u: 'https://paperswithcode.com/', n: '只带代码的论文' },
         { t: 'ComfyUI Releases', u: 'https://github.com/comfyanonymous/ComfyUI/releases', n: '你的主战场，更新了没有' },
-        { t: 'sd-scripts', u: 'https://github.com/kohya-ss/sd-scripts', n: 'LoRA 训练的事实标准' }
+        { t: 'sd-scripts', u: 'https://github.com/kohya-ss/sd-scripts', n: 'LoRA 训练的事实标准' },
+        { t: 'DeepSeek 更新日志', u: 'https://api-docs.deepseek.com/updates', n: '看模型与 API 的变化，别听二手转述' },
+        { t: 'Artificial Analysis', u: 'https://artificialanalysis.ai/', n: '同一张表对比各家模型：智力 / 速度 / 价格' }
       ]
     },
     {
