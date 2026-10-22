@@ -710,3 +710,48 @@ button{-webkit-tap-highlight-color:transparent}
 .route-phase:first-child{margin-top:0}
 .route-phase b{font-size:12.5px;font-weight:600;color:var(--accent);white-space:nowrap}
 .route-phase span{font-size:11px;color:var(--text-3);line-height:1.55;flex:1;min-width:200px}
+
+/* ---------------- V6 明度与层次 ---------------- */
+:root{
+  --bg:#0d1117;
+  --surface:#171d27;
+  --surface-2:#202734;
+  --line:rgba(255,255,255,.16);
+  --line-2:rgba(255,255,255,.32);
+  --text:#f0f3f8;
+  --text-2:#b8c1d1;
+  --text-3:#808b9d;
+}
+
+body{background:var(--bg)}
+
+/* 顶栏/导航跟着抬一点，避免和主区脱节 */
+.hud{background:rgba(13,17,23,.92);border-bottom-color:var(--line)}
+.tabs{background:rgba(13,17,23,.9);border-bottom-color:var(--line-soft)}
+
+/* 标题更白一点，主体更突出 */
+.panel-head h2,.world-head h2,.sh-hero h2,.cc-id b,.cc-stats b,
+.stat b,.tc-text,.stage-card h3,.sh-sec p b{color:#fff}
+
+/* 可点击卡片：边框加厚 + 顶部白色高光 */
+.world-card,.stage-card,.panel,.char-card,.today-card,
+.res,.task,.gterm,.gd-card,.lo-card,.ms-card,.q-card,.opt,
+.fast-row,.ach,.streak-box,.filter-row,.boost-list li{
+  border-width:2px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+/* 按钮同样加厚 */
+.btn{border-width:2px}
+.btn-main{border-width:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.35)}
+.tab.is-on{border-width:2px}
+.mode-btn,.chip{border-width:2px}
+.pace{border-width:2px}
+
+/* 关卡节点加厚 */
+.node{border-width:2px}
+
+/* hover 时边框再亮一档，明确"可点击" */
+.world-card:hover,.stage-card:hover,.res:hover,.task:hover,.gterm:hover{
+  border-color:var(--line-2);
+}
