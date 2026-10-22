@@ -693,3 +693,20 @@ button{-webkit-tap-highlight-color:transparent}
 }
 .badge.done{background:transparent}
 .sc-bar i,.bar i,.wc-prog i,.lo-bar i,.ms-prog i,.sprint-bar i{box-shadow:none}
+
+/* ---------------- 推荐路线（地图页入口） ---------------- */
+.route-card{border-color:color-mix(in srgb,var(--accent) 30%,var(--line))}
+.route-card h3{color:var(--accent)}
+.route-card.is-on{
+  border-color:color-mix(in srgb,var(--accent) 55%,var(--line));
+  background:color-mix(in srgb,var(--accent) 8%,var(--surface));
+}
+.route-phase{
+  margin:14px 0 2px;padding:10px 12px;
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r-sm);
+  display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;
+}
+.route-phase:first-child{margin-top:0}
+.route-phase b{font-size:12.5px;font-weight:600;color:var(--accent);white-space:nowrap}
+.route-phase span{font-size:11px;color:var(--text-3);line-height:1.55;flex:1;min-width:200px}

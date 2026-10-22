@@ -26,7 +26,7 @@
       worlds: w,
       checkins: {},
       ach: {},
-      settings: { sound: true },
+      settings: { sound: true, mapRoute: false },
       intel: {},
       gloss: { known: {}, daily: {} },
       lastWorld: D.worlds[0].id,
@@ -51,6 +51,7 @@
       var ps = p.settings;
       base.settings.sound = ps.sound !== false;
       if (ps.route !== undefined) base.settings.route = !!ps.route;
+      if (ps.mapRoute !== undefined) base.settings.mapRoute = !!ps.mapRoute;
       if (ps.routePace) base.settings.routePace = ps.routePace;
       if (ps.pace) base.settings.pace = ps.pace;
       if (ps.paceByWorld) base.settings.paceByWorld = ps.paceByWorld;
@@ -289,7 +290,7 @@
       var done = ms.filter(function (s) { return cleared(w.id, s); }).length;
       var pct = ms.length ? (done / ms.length) * 100 : 0;
       var el = document.createElement('button');
-      el.className = 'world-card' + (S.lastWorld === w.id ? ' is-on' : '');
+      el.className = 'world-card' + ((!S.settings.mapRoute && S.lastWorld === w.id) ? ' is-on' : '');
       el.style.setProperty('--wc', w.accent);
       el.style.setProperty('--wc-line', w.color);
       el.innerHTML =
@@ -299,19 +300,60 @@
         '<p>' + w.tagline + '</p>' +
         '<div class="wc-prog"><i style="width:' + pct + '%"></i></div>';
       el.addEventListener('click', function () {
-        if (S.lastWorld === w.id) return;
+        if (!S.settings.mapRoute && S.lastWorld === w.id) return;
+        S.settings.mapRoute = false;
         S.lastWorld = w.id; save(); sfx('tick');
-        renderWorlds(); renderWorldHead(); renderMap();
+        renderWorlds(); renderRouteCard(); renderWorldHead(); renderMap();
       });
       box.appendChild(el);
     });
   }
 
+  function routeSeq() {
+    var out = [];
+    var R = window.ROUTE;
+    if (!R) return out;
+    R.phases.forEach(function (p) {
+      p.stages.forEach(function (sid) {
+        var loc = findStageAnywhere(sid);
+        if (!loc) return;
+        out.push({ wid: loc.wid, s: getStage(loc.wid, sid), phase: p });
+      });
+    });
+    var ok = true;
+    out.forEach(function (it) {
+      it.un = ok;
+      ok = ok && cleared(it.wid, it.s);
+    });
+    return out;
+  }
+
   function renderWorldHead() {
+    var head = $('#worldHead');
+    if (S.settings.mapRoute && window.ROUTE) {
+      var totalH = 0, doneH = 0;
+      routeSeq().forEach(function (it) {
+        var h = it.s.hours || 0;
+        totalH += h;
+        doneH += h * stats(it.wid, it.s).ratio;
+      });
+      var months = Math.round(totalH / 12 / 4.33);
+      head.style.setProperty('--wh', '#6ea8fe');
+      head.innerHTML =
+        '<div>' +
+          '<div class="wh-jp">ROUTE · 先数媒，再补工程</div>' +
+          '<h2>推荐路线</h2>' +
+          '<div class="wh-tagline">四条线合并成一条主线：造管线 → 补工程 → 上线。约 ' + months + ' 个月（每周 12 小时）。</div>' +
+        '</div>' +
+        '<div class="wh-right">' +
+          '<div class="wh-count">' + (totalH ? Math.round(doneH / totalH * 100) : 0) + '<small> % 完成</small></div>' +
+          '<div class="wh-desc">' + totalH + ' 小时 · 已完成 ' + Math.round(doneH) + ' h</div>' +
+        '</div>';
+      return;
+    }
     var w = world(S.lastWorld);
     var ms = mainStages(w);
     var done = ms.filter(function (s) { return cleared(w.id, s); }).length;
-    var head = $('#worldHead');
     head.style.setProperty('--wh', w.accent);
     head.innerHTML =
       '<div>' +
@@ -326,59 +368,107 @@
   }
 
   /* ---------------- 地图 ---------------- */
+  function makeStageRow(wid, s, firstOpen, unOverride) {
+    var w = world(wid);
+    var st = stats(wid, s);
+    var un = (unOverride === undefined) ? unlocked(wid, s) : unOverride;
+    var cl = cleared(wid, s);
+
+    var row = document.createElement('div');
+    row.className = 'stage-row' +
+      (cl ? ' is-cleared' : '') +
+      (!un ? ' is-locked' : '') +
+      (firstOpen === s ? ' is-current' : '');
+    row.style.setProperty('--sc', w.accent);
+
+    var badges = '';
+    if (s.side) badges += '<span class="badge side">副线</span>';
+    else if (s.open) badges += '<span class="badge side">并行</span>';
+    if (cl) badges += '<span class="badge done">已通关</span>';
+    else if (firstOpen === s) badges += '<span class="badge now">现在</span>';
+    else if (!un) badges += '<span class="badge lock">未解锁</span>';
+
+    row.innerHTML =
+      '<div class="node">' +
+        (cl ? '<svg><use href="#icon-check"/></svg>'
+            : (!un ? '<svg><use href="#icon-lock"/></svg>' : '<span class="no">' + s.no + '</span>')) +
+      '</div>' +
+      '<button class="stage-card">' +
+        '<div class="sc-top">' +
+          '<h3>' + s.name + '</h3>' +
+          '<span class="sc-jp">' + s.jp + '</span>' +
+          badges +
+          '<span class="sc-dur">' + s.duration + '</span>' +
+        '</div>' +
+        '<div class="sc-goal">' + s.goal + '</div>' +
+        '<div class="sc-foot">' +
+          '<div class="sc-bar"><i style="width:' + (st.ratio * 100) + '%"></i></div>' +
+          '<span class="sc-num">' + st.done + '/' + st.total + ' 任务</span>' +
+        '</div>' +
+      '</button>';
+
+    row.querySelector('.stage-card').addEventListener('click', function () {
+      if (!un) { toast('前面的关卡还没通关，这里还锁着', 'bad'); sfx('bad'); return; }
+      openSheet(wid, s.id);
+    });
+    return row;
+  }
+
+  function renderRouteCard() {
+    var el = $('#routeCard');
+    if (!el || !window.ROUTE) return;
+    var totalH = 0, doneH = 0;
+    routeSeq().forEach(function (it) {
+      var h = it.s.hours || 0;
+      totalH += h;
+      doneH += h * stats(it.wid, it.s).ratio;
+    });
+    var pct = totalH ? Math.round(doneH / totalH * 100) : 0;
+    el.style.setProperty('--wc', '#6ea8fe');
+    el.className = 'world-card route-card' + (S.settings.mapRoute ? ' is-on' : '');
+    el.innerHTML = '<h3>推荐路线</h3><span class="wc-num">' + pct + '%</span>' +
+      '<div class="wc-prog"><i style="width:' + pct + '%"></i></div>';
+    el.onclick = function () {
+      S.settings.mapRoute = !S.settings.mapRoute;
+      save(); sfx('tick');
+      renderWorlds(); renderRouteCard(); renderWorldHead(); renderMap();
+    };
+  }
+
   function renderMap() {
-    var w = world(S.lastWorld);
     var box = $('#map');
     box.innerHTML = '';
-    var firstOpen = null;
+    renderRouteCard();
 
-    w.stages.forEach(function (s) {
-      var st = stats(w.id, s);
-      var un = unlocked(w.id, s);
-      var cl = cleared(w.id, s);
-      if (un && !cl && !firstOpen) firstOpen = s;
-
-      var row = document.createElement('div');
-      row.className = 'stage-row' +
-        (cl ? ' is-cleared' : '') +
-        (!un ? ' is-locked' : '') +
-        (firstOpen === s ? ' is-current' : '');
-      row.style.setProperty('--sc', w.accent);
-
-      var badges = '';
-      if (s.side) badges += '<span class="badge side">副线</span>';
-      else if (s.open) badges += '<span class="badge side">并行</span>';
-      if (cl) badges += '<span class="badge done">已通关</span>';
-      else if (firstOpen === s) badges += '<span class="badge now">现在</span>';
-      else if (!un) badges += '<span class="badge lock">未解锁</span>';
-
-      row.innerHTML =
-        '<div class="node">' +
-          (cl ? '<svg><use href="#icon-check"/></svg>'
-              : (!un ? '<svg><use href="#icon-lock"/></svg>' : '<span class="no">' + s.no + '</span>')) +
-        '</div>' +
-        '<button class="stage-card">' +
-          '<div class="sc-top">' +
-            '<h3>' + s.name + '</h3>' +
-            '<span class="sc-jp">' + s.jp + '</span>' +
-            badges +
-            '<span class="sc-dur">' + s.duration + '</span>' +
-          '</div>' +
-          '<div class="sc-goal">' + s.goal + '</div>' +
-          '<div class="sc-foot">' +
-            '<div class="sc-bar"><i style="width:' + (st.ratio * 100) + '%"></i></div>' +
-            '<span class="sc-num">' + st.done + '/' + st.total + ' 任务</span>' +
-          '</div>' +
-        '</button>';
-
-      row.querySelector('.stage-card').addEventListener('click', function () {
-        if (!un) { toast('前面的关卡还没通关，这里还锁着', 'bad'); sfx('bad'); return; }
-        openSheet(w.id, s.id);
+    if (S.settings.mapRoute && window.ROUTE) {
+      var seq = routeSeq();
+      var firstOpen = null;
+      seq.forEach(function (it) {
+        if (it.un && !cleared(it.wid, it.s) && !firstOpen) firstOpen = it.s;
       });
+      var lastPhase = null;
+      seq.forEach(function (it) {
+        if (it.phase !== lastPhase) {
+          lastPhase = it.phase;
+          var ph = document.createElement('div');
+          ph.className = 'route-phase';
+          ph.innerHTML = '<b>' + lastPhase.name + '</b><span>' + lastPhase.why + '</span>';
+          box.appendChild(ph);
+        }
+        box.appendChild(makeStageRow(it.wid, it.s, firstOpen, it.un));
+      });
+      renderToday();
+      return;
+    }
 
-      box.appendChild(row);
+    var w = world(S.lastWorld);
+    var firstOpen2 = null;
+    w.stages.forEach(function (s) {
+      if (unlocked(w.id, s) && !cleared(w.id, s) && !firstOpen2) firstOpen2 = s;
     });
-
+    w.stages.forEach(function (s) {
+      box.appendChild(makeStageRow(w.id, s, firstOpen2));
+    });
     renderToday();
   }
 
@@ -386,23 +476,38 @@
   function renderToday() {
     var box = $('#todayCard');
     if (!box) return;
-    var w = world(S.lastWorld);
-    var target = null, taskText = '', examTarget = null;
+    var target = null, taskText = '', examTarget = null, targetWid = null, examWid = null;
 
-    for (var i = 0; i < w.stages.length; i++) {
-      var s = w.stages[i];
-      if (!unlocked(w.id, s) || cleared(w.id, s)) continue;
-      var st0 = stats(w.id, s);
-      if (st0.done === st0.total) { examTarget = s; break; }
-      for (var j = 0; j < s.tasks.length; j++) {
-        if (!isTask(w.id, s.id, j)) { target = s; taskText = s.tasks[j]; break; }
+    if (S.settings.mapRoute && window.ROUTE) {
+      var seq = routeSeq();
+      for (var i = 0; i < seq.length; i++) {
+        var it = seq[i];
+        if (!it.un || cleared(it.wid, it.s)) continue;
+        var st0 = stats(it.wid, it.s);
+        if (st0.done === st0.total) { examTarget = it.s; examWid = it.wid; break; }
+        for (var j = 0; j < it.s.tasks.length; j++) {
+          if (!isTask(it.wid, it.s.id, j)) { target = it.s; targetWid = it.wid; taskText = it.s.tasks[j]; break; }
+        }
+        if (target) break;
       }
-      if (target) break;
+    } else {
+      var w0 = world(S.lastWorld);
+      for (var k = 0; k < w0.stages.length; k++) {
+        var s0 = w0.stages[k];
+        if (!unlocked(w0.id, s0) || cleared(w0.id, s0)) continue;
+        var st1 = stats(w0.id, s0);
+        if (st1.done === st1.total) { examTarget = s0; examWid = w0.id; break; }
+        for (var m = 0; m < s0.tasks.length; m++) {
+          if (!isTask(w0.id, s0.id, m)) { target = s0; targetWid = w0.id; taskText = s0.tasks[m]; break; }
+        }
+        if (target) break;
+      }
     }
 
     if (examTarget) {
+      var ew = world(examWid);
       box.innerHTML = '<div class="today-card is-exam">' +
-        '<div class="tc-label">主线任务 · 验收 · ' + w.name + ' / ' + examTarget.name + '</div>' +
+        '<div class="tc-label">主线任务 · 验收 · ' + ew.name + ' / ' + examTarget.name + '</div>' +
         '<div class="tc-text">任务已经全部完成，去把这一关的验收考试过掉——不合格可以立刻重考。</div>' +
         '<div class="tc-foot">' +
           '<span class="tc-prog">' + examTarget.tasks.length + ' / ' + examTarget.tasks.length + ' 任务　约 ' + (examTarget.hours || 0) + ' 小时</span>' +
@@ -410,21 +515,22 @@
         '</div>' +
         '</div>';
       var eb2 = $('#todayExam', box);
-      if (eb2) eb2.addEventListener('click', function () { startExam(w.id, examTarget.id); });
+      if (eb2) eb2.addEventListener('click', function () { startExam(examWid, examTarget.id); });
       return;
     }
 
     if (!target) {
       box.innerHTML = '<div class="today-card is-done">' +
         '<div class="tc-label">主线任务</div>' +
-        '<div class="tc-text">这条世界线已经全部通关。换一条世界线，或者去把副线补完。</div>' +
+        '<div class="tc-text">' + (S.settings.mapRoute ? '推荐路线已经全部走完。' : '这条世界线已经全部通关。换一条世界线，或者去把副线补完。') + '</div>' +
         '</div>';
       return;
     }
 
-    var st = stats(w.id, target);
+    var tw = world(targetWid);
+    var st = stats(targetWid, target);
     box.innerHTML = '<div class="today-card">' +
-      '<div class="tc-label">主线任务 · ' + w.name + ' / ' + target.name + '</div>' +
+      '<div class="tc-label">主线任务 · ' + tw.name + ' / ' + target.name + '</div>' +
       '<div class="tc-text">' + taskText + '</div>' +
       '<div class="tc-foot">' +
         '<span class="tc-prog">' + st.done + ' / ' + st.total + '　约 ' + (target.hours || 0) + ' 小时</span>' +
@@ -433,7 +539,7 @@
       '</div>';
 
     var b = $('#todayGo', box);
-    if (b) b.addEventListener('click', function () { openSheet(w.id, target.id); });
+    if (b) b.addEventListener('click', function () { openSheet(targetWid, target.id); });
   }
 
   /* ---------------- 人生进度表 ---------------- */
