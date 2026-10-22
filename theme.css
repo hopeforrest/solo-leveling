@@ -1,0 +1,262 @@
+/* ============================================================
+   V3 主题 · 简洁 / 信息优先
+   加载在 style.css 之后，只改视觉，不动布局与 DOM 结构
+   ============================================================ */
+
+:root{
+  --ink:#0a0e14;
+  --ink-2:#0e131b;
+  --panel:rgba(255,255,255,.032);
+  --panel-2:rgba(255,255,255,.06);
+  --line:rgba(255,255,255,.075);
+  --line-2:rgba(255,255,255,.16);
+  --text:#e8edf6;
+  --dim:#9aa5b8;
+  --dim-2:#6b7689;
+  --cyan:#4cc9f0;
+  --blue:#4c8dff;
+  --violet:#8b7cf6;
+  --gold:#f5b942;
+  --mint:#43e0b0;
+  --ok:#33d69f;
+  --bad:#f26d6d;
+  --r-lg:18px;
+  --r-md:14px;
+  --r-sm:10px;
+  --shadow:0 10px 30px -18px rgba(0,0,0,.8);
+}
+
+body{background:var(--ink)}
+
+/* 背景：去掉光斑、噪点、网格，只留一层很淡的顶部光 */
+.bg{
+  background:radial-gradient(900px 520px at 50% -12%, #111c28 0%, transparent 70%);
+}
+.orb,.noise,.grid{display:none}
+
+/* ---------------- HUD ---------------- */
+.hud{
+  background:rgba(10,14,20,.88);
+  border-bottom:1px solid var(--line);
+  box-shadow:none;
+  padding:10px clamp(14px,3vw,26px);
+}
+.hud::after{display:none}
+.avatar{box-shadow:0 0 0 1px rgba(255,255,255,.10)}
+.avatar-ring{animation:none;opacity:.5}
+.id-name{font-weight:700;letter-spacing:.02em}
+.id-name em{color:var(--cyan);border-color:rgba(76,201,240,.28);opacity:1}
+.bar{height:6px;background:rgba(255,255,255,.08)}
+.bar i{background:var(--cyan);box-shadow:none}
+.stat b{
+  background:none;-webkit-background-clip:initial;background-clip:initial;
+  color:var(--text);font-size:15px;
+}
+
+/* ---------------- Tabs ---------------- */
+.tabs{
+  background:rgba(10,14,20,.82);
+  border-bottom:1px solid var(--line);
+  padding:8px clamp(14px,3vw,26px);
+}
+.tab{
+  border-radius:9px;
+  border-color:transparent;
+  background:transparent;
+  padding:7px 14px;
+}
+.tab b{font-weight:600;font-size:13px;letter-spacing:.02em}
+.tab span{font-size:8px;letter-spacing:.1em;opacity:.35}
+.tab:hover{background:rgba(255,255,255,.05);transform:none}
+.tab.is-on{
+  background:rgba(76,201,240,.10);
+  border-color:rgba(76,201,240,.35);
+  color:var(--cyan);
+  box-shadow:none;
+}
+.tab.is-on span{opacity:.5}
+
+/* ---------------- 面板 ---------------- */
+.panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:var(--r-lg);
+  box-shadow:none;
+}
+.panel::before,.panel::after{display:none}
+.panel-head h2{font-size:15px;letter-spacing:0}
+.panel-head span{font-size:9px;letter-spacing:.12em;color:var(--dim-2)}
+
+/* ---------------- 世界线 ---------------- */
+.world-card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:var(--r-md);
+  box-shadow:none;
+}
+.world-card::after{display:none}
+.world-card:hover{border-color:var(--line-2);transform:none}
+.world-card.is-on{
+  border-color:color-mix(in srgb, var(--wc) 55%, transparent);
+  background:color-mix(in srgb, var(--wc) 7%, transparent);
+}
+.world-head{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:var(--r-md);
+  box-shadow:none;
+}
+.world-head::before{display:none}
+
+/* ---------------- 关卡 ---------------- */
+.stage-card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:var(--r-md);
+  box-shadow:none;
+}
+.stage-card::after{display:none}
+.stage-card:hover{transform:none;border-color:var(--line-2);box-shadow:none}
+.stage-row.is-current .stage-card{
+  border-color:rgba(76,201,240,.42);
+  background:rgba(76,201,240,.04);
+}
+.stage-row.is-current .node{box-shadow:0 0 0 3px rgba(76,201,240,.14)}
+.stage-row::before{background:rgba(255,255,255,.06)}
+.sc-goal{color:var(--dim)}
+.badge{border-radius:6px}
+
+/* ---------------- 今日任务 ---------------- */
+.today-card{
+  background:var(--panel);
+  border:1px solid rgba(76,201,240,.28);
+  border-radius:var(--r-md);
+}
+.today-card::before{
+  width:3px;
+  background:var(--cyan);
+  box-shadow:none;
+}
+.today-card.is-done{border-color:var(--line)}
+.today-card.is-done::before{background:var(--mint);box-shadow:none}
+.today-card.is-exam{border-color:rgba(245,185,66,.32);background:var(--panel)}
+.today-card.is-exam::before{background:var(--gold);box-shadow:none}
+.tc-text{font-weight:500}
+
+/* ---------------- 按钮 ---------------- */
+.btn{
+  border-radius:var(--r-sm);
+  border-color:var(--line);
+  background:rgba(255,255,255,.04);
+}
+.btn:hover{background:rgba(255,255,255,.08);border-color:var(--line-2);transform:none}
+.btn-main{
+  background:var(--cyan);
+  color:#06202a;
+  border-color:transparent;
+  font-weight:700;
+}
+.btn-main:hover{background:#63d4f5;filter:none;box-shadow:none}
+.btn-ghost{border-color:transparent}
+.btn-danger{color:var(--bad)}
+
+/* ---------------- 关卡详情 ---------------- */
+.sheet{
+  background:#0d1117;
+  border-left:1px solid var(--line);
+  box-shadow:none;
+}
+.sh-hero{border-bottom:1px solid var(--line)}
+.sh-sec h3{font-size:11px;letter-spacing:.1em;color:var(--dim-2)}
+.task{
+  background:rgba(255,255,255,.025);
+  border:1px solid var(--line);
+  border-radius:var(--r-sm);
+}
+.task:hover{background:rgba(255,255,255,.05);border-color:var(--line-2)}
+.task.on{border-color:rgba(67,224,176,.45);background:rgba(67,224,176,.06)}
+.res{
+  background:rgba(255,255,255,.022);
+  border:1px solid var(--line);
+  border-radius:var(--r-sm);
+}
+.res:hover{background:rgba(76,201,240,.06);border-color:rgba(76,201,240,.35);transform:none}
+.res-k{border-radius:8px}
+.sh-foot{background:rgba(13,17,23,.96);border-top:1px solid var(--line)}
+
+/* ---------------- 考试 ---------------- */
+.exam{background:var(--ink)}
+.opt{
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--line);
+  border-radius:var(--r-sm);
+}
+.opt:hover{border-color:var(--line-2);background:rgba(255,255,255,.05)}
+.opt.sel{border-color:var(--cyan);background:rgba(76,201,240,.08)}
+.opt.right{border-color:rgba(51,214,159,.55);background:rgba(51,214,159,.07)}
+.opt.wrong{border-color:rgba(242,109,109,.55);background:rgba(242,109,109,.07)}
+
+/* ---------------- 里程碑 / 进度 ---------------- */
+.lo-card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:var(--r-md);
+}
+.lo-card:hover{transform:none;border-color:var(--line-2)}
+.mode-btn{
+  border-radius:var(--r-sm);
+  border-color:var(--line);
+}
+.mode-btn.on{background:rgba(76,201,240,.1);border-color:rgba(76,201,240,.4);color:var(--cyan)}
+.pace{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:var(--r-md);
+}
+.pace:hover{transform:none;border-color:var(--line-2)}
+.pace.on{
+  background:rgba(76,201,240,.08);
+  border-color:rgba(76,201,240,.45);
+  box-shadow:none;
+}
+.pace b,.ss b{
+  background:none;-webkit-background-clip:initial;background-clip:initial;
+  color:var(--text);
+}
+.pace.on em{color:var(--cyan)}
+.ms-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-md)}
+.ms-item::before{background:rgba(255,255,255,.08)}
+.gbar{border-radius:4px}
+.gbar:hover{filter:brightness(1.2);transform:none}
+.gantt-track::before{opacity:.5}
+
+/* ---------------- 情报 / 术语 ---------------- */
+.filter-row{background:rgba(255,255,255,.022);border:1px solid var(--line);border-radius:var(--r-sm)}
+.chip{border-color:var(--line);border-radius:999px}
+.chip.on{border-color:rgba(76,201,240,.45);background:rgba(76,201,240,.08)}
+.gterm{background:var(--panel);border:1px solid var(--line)}
+.gterm:hover{background:var(--panel-2);border-color:var(--line-2)}
+
+/* ---------------- 打卡 / 成就 / 存档 ---------------- */
+.streak-box{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-md)}
+.heatmap-cell{background:rgba(255,255,255,.05)}
+.heatmap-cell.l4{background:var(--mint)}
+.ach{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-md)}
+.ach.on{border-color:rgba(67,224,176,.35);background:rgba(67,224,176,.05)}
+.field input,.save-box{
+  background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:var(--r-sm);
+}
+.save-box:focus{border-color:rgba(76,201,240,.4)}
+
+/* ---------------- 底部 / 弹层 ---------------- */
+.footer{border-top:1px solid var(--line);opacity:.8}
+.toast{border-radius:12px}
+.levelup .lu-box,.tg-box{box-shadow:none}
+
+/* ---------------- 可用性 ---------------- */
+:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+button{ -webkit-tap-highlight-color:transparent }
+@media (max-width:720px){
+  .tab{min-height:44px;padding:8px 12px}
+  .main{padding:12px 14px 28px}
+}
