@@ -109,10 +109,20 @@
 <main class="main">
 
   <section class="view is-on" id="view-map">
-    <div class="worlds" id="worlds"></div>
-    <div class="world-head" id="worldHead"></div>
-    <div id="todayCard"></div>
-    <div class="map" id="map"></div>
+    <div class="map-grid">
+      <aside class="map-side">
+        <div class="char-card" id="charCard"></div>
+        <div class="side-title">世界线</div>
+        <div class="worlds" id="worlds"></div>
+      </aside>
+      <div class="map-main">
+        <div class="world-head" id="worldHead"></div>
+        <div class="sec-title">主线任务</div>
+        <div id="todayCard"></div>
+        <div class="sec-title">任务链</div>
+        <div class="map" id="map"></div>
+      </div>
+    </div>
   </section>
 
   <section class="view" id="view-sprint">

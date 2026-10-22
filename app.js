@@ -260,6 +260,24 @@
     $('#statClear').textContent = totalClears();
     $('#statTask').textContent = totalTasks();
     document.title = 'Lv.' + lv + ' · ' + ((D.meta && D.meta.site) || '学习系统');
+
+    var cc = $('#charCard');
+    if (cc) {
+      var pct2 = Math.max(0, Math.min(100, ((exp - b.from) / span) * 100));
+      cc.innerHTML =
+        '<div class="cc-top">' +
+          '<div class="cc-avatar"><svg><use href="#mascot"/></svg></div>' +
+          '<div class="cc-id"><b>' + (S.player.name || '无名猎人') + '</b>' +
+          '<span>' + t.name + ' · Lv.' + lv + '</span></div>' +
+        '</div>' +
+        '<div class="cc-exp"><span>' + (exp - b.from) + ' / ' + span + ' EXP</span>' +
+        '<i style="width:' + pct2 + '%"></i></div>' +
+        '<div class="cc-stats">' +
+          '<div><b>' + streakNow() + '</b><span>连击</span></div>' +
+          '<div><b>' + totalClears() + '</b><span>通关</span></div>' +
+          '<div><b>' + totalTasks() + '</b><span>任务</span></div>' +
+        '</div>';
+    }
   }
 
   /* ---------------- 世界线 ---------------- */
@@ -384,7 +402,7 @@
 
     if (examTarget) {
       box.innerHTML = '<div class="today-card is-exam">' +
-        '<div class="tc-label">该验收了 · ' + w.name + ' / ' + examTarget.name + '</div>' +
+        '<div class="tc-label">主线任务 · 验收 · ' + w.name + ' / ' + examTarget.name + '</div>' +
         '<div class="tc-text">任务已经全部完成，去把这一关的验收考试过掉——不合格可以立刻重考。</div>' +
         '<div class="tc-foot">' +
           '<span class="tc-prog">' + examTarget.tasks.length + ' / ' + examTarget.tasks.length + ' 任务　约 ' + (examTarget.hours || 0) + ' 小时</span>' +
@@ -398,7 +416,7 @@
 
     if (!target) {
       box.innerHTML = '<div class="today-card is-done">' +
-        '<div class="tc-label">今日任务</div>' +
+        '<div class="tc-label">主线任务</div>' +
         '<div class="tc-text">这条世界线已经全部通关。换一条世界线，或者去把副线补完。</div>' +
         '</div>';
       return;
@@ -406,7 +424,7 @@
 
     var st = stats(w.id, target);
     box.innerHTML = '<div class="today-card">' +
-      '<div class="tc-label">今日任务 · ' + w.name + ' / ' + target.name + '</div>' +
+      '<div class="tc-label">主线任务 · ' + w.name + ' / ' + target.name + '</div>' +
       '<div class="tc-text">' + taskText + '</div>' +
       '<div class="tc-foot">' +
         '<span class="tc-prog">' + st.done + ' / ' + st.total + '　约 ' + (target.hours || 0) + ' 小时</span>' +
