@@ -328,6 +328,57 @@
     return out;
   }
 
+  function nextStageInfo() {
+    var pace = 12;
+    var found = null;
+    if (S.settings.mapRoute && window.ROUTE) {
+      var seq = routeSeq();
+      for (var i = 0; i < seq.length; i++) {
+        if (seq[i].un && !cleared(seq[i].wid, seq[i].s)) { found = seq[i]; break; }
+      }
+    } else {
+      var w = world(S.lastWorld);
+      for (var j = 0; j < w.stages.length; j++) {
+        var s = w.stages[j];
+        if (unlocked(w.id, s) && !cleared(w.id, s)) { found = { wid: w.id, s: s }; break; }
+      }
+    }
+    if (!found) return null;
+    var st = stats(found.wid, found.s);
+    var remH = (found.s.hours || 0) * (1 - st.ratio);
+    return {
+      wid: found.wid, s: found.s, done: st.done, total: st.total,
+      remH: Math.round(remH),
+      weeks: st.done === st.total ? 0 : Math.max(1, Math.ceil(remH / pace))
+    };
+  }
+
+  function renderWeekCard() {
+    var el = $('#weekCard');
+    if (!el) return;
+    var info = nextStageInfo();
+    var streak = streakNow();
+    var main, sub, pct = 0;
+    if (!info) {
+      main = '全部通关';
+      sub = '去补副线，或把作品收进作品墙';
+      pct = 100;
+    } else if (info.done === info.total) {
+      main = '该验收了';
+      sub = info.s.name + ' · 任务已全部完成';
+      pct = 100;
+    } else {
+      main = '还差 ' + (info.total - info.done) + ' 个任务';
+      sub = info.s.name + ' · 约 ' + info.weeks + ' 周（每周 12h）';
+      pct = info.total ? info.done / info.total * 100 : 0;
+    }
+    el.innerHTML =
+      '<div class="wk-head"><span>本周</span><b>连续 ' + streak + ' 天</b></div>' +
+      '<div class="wk-next"><b>' + main + '</b><span>' + sub + '</span></div>' +
+      '<div class="wk-bar"><i style="width:' + pct + '%"></i></div>' +
+      '<div class="wk-foot">小目标：这周把这 1 个任务做出来就够</div>';
+  }
+
   function renderWorldHead() {
     var head = $('#worldHead');
     if (S.settings.mapRoute && window.ROUTE) {
@@ -338,12 +389,14 @@
         doneH += h * stats(it.wid, it.s).ratio;
       });
       var months = Math.round(totalH / 12 / 4.33);
+      var info = nextStageInfo();
+      var near = info ? ('下一关预计 ' + (info.weeks || 0) + ' 周') : '路线已走完';
       head.style.setProperty('--wh', '#6ea8fe');
       head.innerHTML =
         '<div>' +
           '<div class="wh-jp">ROUTE · 先数媒，再补工程</div>' +
           '<h2>推荐路线</h2>' +
-          '<div class="wh-tagline">四条线合并成一条主线：造管线 → 补工程 → 上线。约 ' + months + ' 个月（每周 12 小时）。</div>' +
+          '<div class="wh-tagline">' + near + '　·　整条路线约 ' + months + ' 个月（每周 12 小时）。</div>' +
         '</div>' +
         '<div class="wh-right">' +
           '<div class="wh-count">' + (totalH ? Math.round(doneH / totalH * 100) : 0) + '<small> % 完成</small></div>' +
@@ -363,7 +416,7 @@
       '</div>' +
       '<div class="wh-right">' +
         '<div class="wh-count">' + done + '<small> / ' + ms.length + ' 关</small></div>' +
-        '<div class="wh-desc">' + w.desc + '</div>' +
+        '<div class="wh-desc">' + w.desc + (nextStageInfo() ? '　·　下一关约 ' + nextStageInfo().weeks + ' 周' : '') + '</div>' +
       '</div>';
   }
 
@@ -439,6 +492,7 @@
     var box = $('#map');
     box.innerHTML = '';
     renderRouteCard();
+    renderWeekCard();
 
     if (S.settings.mapRoute && window.ROUTE) {
       var seq = routeSeq();
