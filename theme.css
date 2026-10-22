@@ -774,3 +774,35 @@ body{background:var(--bg)}
 .wk-bar{margin-top:10px;height:3px;border-radius:2px;background:var(--line-soft);overflow:hidden}
 .wk-bar i{display:block;height:100%;background:var(--accent);border-radius:2px}
 .wk-foot{margin-top:9px;font-size:10.5px;color:var(--text-3)}
+
+/* ---------------- 交付物 / 作品集 ---------------- */
+.deliver-t{font-size:13px;color:var(--text);margin-bottom:10px}
+.deliver-list{display:flex;flex-direction:column;gap:8px}
+.deliver-item{
+  display:flex;align-items:flex-start;gap:10px;text-align:left;
+  padding:11px 13px;border-radius:var(--r-sm);
+  border:1px solid var(--line);background:var(--surface);
+  color:var(--text-2);font-size:12.5px;line-height:1.55;
+  transition:border-color .15s,background .15s;
+}
+.deliver-item:hover{border-color:var(--line-2);background:var(--surface-2)}
+.deliver-item .box{
+  flex:0 0 auto;width:16px;height:16px;border-radius:5px;margin-top:1px;
+  border:1px solid var(--line-2);display:grid;place-items:center;
+}
+.deliver-item .box svg{width:11px;height:11px;opacity:0}
+.deliver-item.on{border-color:color-mix(in srgb,var(--ok) 40%,var(--line));background:var(--surface-2)}
+.deliver-item.on .box{background:var(--ok);border-color:var(--ok)}
+.deliver-item.on .box svg{opacity:1;color:#0b0d12}
+.deliver-item.on .tx{color:var(--text-3);text-decoration:line-through;text-decoration-color:var(--line-2)}
+.portfolio-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.pf-item{
+  display:flex;flex-direction:column;gap:3px;
+  padding:13px 14px;border-radius:var(--r-sm);
+  border:1px solid var(--line);background:var(--surface);
+}
+.pf-item b{font-size:13px;font-weight:600;color:var(--text)}
+.pf-item span{font-size:11.5px;color:var(--text-3);line-height:1.5}
+.pf-item i{font-size:10.5px;color:var(--text-3);font-style:normal;margin-top:4px}
+.pf-item.on{border-color:color-mix(in srgb,var(--ok) 35%,var(--line))}
+.pf-item.on i{color:var(--ok)}

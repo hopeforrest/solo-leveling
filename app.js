@@ -15,7 +15,7 @@
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
 
   /* ---------------- 状态 ---------------- */
-  function blankWorld() { return { tasks: {}, cleared: {}, exams: {} }; }
+  function blankWorld() { return { tasks: {}, cleared: {}, exams: {}, deliver: {} }; }
 
   function defState() {
     var w = {};
@@ -28,7 +28,7 @@
       ach: {},
       settings: { sound: true, mapRoute: false },
       intel: {},
-      gloss: { known: {}, daily: {} },
+      gloss: { known: {}, daily: {}, sched: {}, level: {} },
       lastWorld: D.worlds[0].id,
       createdAt: Date.now(),
       updatedAt: Date.now()
@@ -60,12 +60,15 @@
     if (p.ach) base.ach = p.ach;
     if (p.intel) base.intel = p.intel;
     if (p.gloss) base.gloss = p.gloss;
+    if (!base.gloss.sched) base.gloss.sched = {};
+    if (!base.gloss.level) base.gloss.level = {};
     Object.keys(base.worlds).forEach(function (id) {
       var src = p.worlds && p.worlds[id];
       if (!src) return;
       base.worlds[id].tasks = src.tasks || {};
       base.worlds[id].cleared = src.cleared || {};
       base.worlds[id].exams = src.exams || {};
+      base.worlds[id].deliver = src.deliver || {};
     });
     return base;
   }
@@ -376,7 +379,7 @@
       '<div class="wk-head"><span>本周</span><b>连续 ' + streak + ' 天</b></div>' +
       '<div class="wk-next"><b>' + main + '</b><span>' + sub + '</span></div>' +
       '<div class="wk-bar"><i style="width:' + pct + '%"></i></div>' +
-      '<div class="wk-foot">小目标：这周把这 1 个任务做出来就够</div>';
+      '<div class="wk-foot">小目标：推进 1 个任务，留 1 天机动</div>';
   }
 
   function renderWorldHead() {
@@ -493,6 +496,7 @@
     box.innerHTML = '';
     renderRouteCard();
     renderWeekCard();
+    renderPortfolio();
 
     if (S.settings.mapRoute && window.ROUTE) {
       var seq = routeSeq();
@@ -938,6 +942,58 @@
     renderGantt();
   }
 
+  /* ---------------- 交付物 / 作品集 ---------------- */
+  function deliverInfo(wid, sid) {
+    var def = (window.DELIVER || {})[sid];
+    if (!def) return null;
+    var st = (S.worlds[wid].deliver && S.worlds[wid].deliver[sid]) || {};
+    var done = 0;
+    def.items.forEach(function (_, i) { if (st[i]) done++; });
+    return { t: def.t, items: def.items, done: done, total: def.items.length, state: st };
+  }
+
+  function deliverHTML(d) {
+    return '<p class="deliver-t"><b>' + d.t + '</b></p>' +
+      '<div class="deliver-list">' +
+      d.items.map(function (x, i) {
+        var on = !!d.state[i];
+        return '<button class="deliver-item' + (on ? ' on' : '') + '" data-dv="' + i + '">' +
+          '<span class="box"><svg><use href="#icon-check"/></svg></span>' +
+          '<span class="tx">' + x + '</span></button>';
+      }).join('') +
+      '</div>';
+  }
+
+  function toggleDeliver(wid, sid, i) {
+    if (!S.worlds[wid].deliver) S.worlds[wid].deliver = {};
+    var st = S.worlds[wid].deliver[sid] || (S.worlds[wid].deliver[sid] = {});
+    if (st[i]) delete st[i]; else st[i] = true;
+    save(); sfx('tick');
+    var sc = $('#sheet').scrollTop;
+    openSheet(wid, sid);
+    $('#sheet').scrollTop = sc;
+    checkAch();
+  }
+
+  function renderPortfolio() {
+    var box = $('#portfolioList');
+    if (!box) return;
+    var works = [
+      { id: 'dm3', name: 'AIGC 管线', desc: '节点 + LoRA + 工作流包，别人能复用' },
+      { id: 'dmai', name: 'LLM 应用', desc: 'API / RAG / Agent，能演示' },
+      { id: 'dm4', name: '上线 + 成片', desc: '公网服务 + 60 秒成片' }
+    ];
+    box.innerHTML = works.map(function (w) {
+      var loc = findStageAnywhere(w.id);
+      var s = loc ? getStage(loc.wid, w.id) : null;
+      var done = loc ? cleared(loc.wid, w.id) : false;
+      return '<div class="pf-item' + (done ? ' on' : '') + '">' +
+        '<b>' + w.name + '</b><span>' + w.desc + '</span>' +
+        '<i>' + (done ? '已达成' : '待完成' + (s ? ' · 第 ' + s.no + ' 关' : '')) + '</i>' +
+      '</div>';
+    }).join('');
+  }
+
   /* ---------------- 关卡面板 ---------------- */
   function openSheet(wid, sid) {
     var w = world(wid), s = getStage(wid, sid);
@@ -946,6 +1002,7 @@
     var cl = cleared(wid, s);
     var ex = S.worlds[wid].exams[sid];
     var allDone = st.done === st.total;
+    var dv = deliverInfo(wid, sid);
 
     var idx = w.stages.indexOf(s);
     var prevS = idx > 0 ? w.stages[idx - 1] : null;
@@ -1012,6 +1069,10 @@
           '</div>' +
         '</div>' +
         '<div class="sh-sec">' +
+          '<h3>交付物 ' + (dv ? dv.done + ' / ' + dv.total : '') + '</h3>' +
+          (dv ? deliverHTML(dv) : '<p class="hint" style="margin-top:0">这一关的交付物还没定义。</p>') +
+        '</div>' +
+        '<div class="sh-sec">' +
           '<h3>别做</h3>' +
           '<ul class="sh-list warn">' + s.donts.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul>' +
         '</div>' +
@@ -1035,6 +1096,12 @@
       btn.addEventListener('click', function () {
         var i = +btn.dataset.task;
         toggleTask(wid, sid, i);
+      });
+    });
+
+    $$('.deliver-item', sheet).forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        toggleDeliver(wid, sid, +btn.dataset.dv);
       });
     });
 
@@ -1488,7 +1555,13 @@
     if (!box) return;
     var d = todayKey();
     if (!S.gloss.daily || S.gloss.daily.date !== d) {
-      var pool = glossTerms().filter(function (t) { return !S.gloss.known[t.en]; });
+      if (!S.gloss.sched) S.gloss.sched = {};
+      if (!S.gloss.level) S.gloss.level = {};
+      var nowTs = Date.now();
+      var due = glossTerms().filter(function (t) {
+        return S.gloss.known[t.en] && (S.gloss.sched[t.en] || 0) <= nowTs;
+      });
+      var pool = due.length ? due : glossTerms().filter(function (t) { return !S.gloss.known[t.en]; });
       if (pool.length < 3) pool = glossTerms().slice();
       var picked = [];
       var h = 2166136261;
@@ -1512,7 +1585,19 @@
 
   function toggleGloss(en) {
     if (!S.gloss.known) S.gloss.known = {};
-    if (S.gloss.known[en]) delete S.gloss.known[en]; else S.gloss.known[en] = true;
+    if (!S.gloss.sched) S.gloss.sched = {};
+    if (!S.gloss.level) S.gloss.level = {};
+    if (S.gloss.known[en]) {
+      delete S.gloss.known[en];
+      delete S.gloss.sched[en];
+      delete S.gloss.level[en];
+    } else {
+      S.gloss.known[en] = true;
+      var lv = Math.min(5, (S.gloss.level[en] || 0) + 1);
+      S.gloss.level[en] = lv;
+      var days = [1, 3, 7, 14, 30, 60][lv - 1] || 60;
+      S.gloss.sched[en] = Date.now() + days * 86400000;
+    }
     save(); sfx('tick'); renderGloss();
   }
 
@@ -1603,7 +1688,17 @@
         return !!(S.worlds.edu && S.worlds.edu.cleared[id]);
       }),
       create1: !!(S.worlds.create && Object.keys(S.worlds.create.cleared).length > 0),
-      dmai: !!(S.worlds.dm && S.worlds.dm.cleared.dmai)
+      dmai: !!(S.worlds.dm && S.worlds.dm.cleared.dmai),
+      deliver1: (function () {
+        var any = false;
+        D.worlds.forEach(function (w) {
+          var dw = (S.worlds[w.id] && S.worlds[w.id].deliver) || {};
+          Object.keys(dw).forEach(function (sid) {
+            if (Object.keys(dw[sid] || {}).length) any = true;
+          });
+        });
+        return any;
+      })()
     };
   }
 
@@ -1734,6 +1829,7 @@
         x.tasks = x.tasks || {};
         x.cleared = x.cleared || {};
         x.exams = x.exams || {};
+        x.deliver = x.deliver || {};
       });
       save();
       renderAll();
