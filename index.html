@@ -99,6 +99,7 @@
   <button class="tab is-on" data-view="map"><b>地图</b><span>MAP</span></button>
   <button class="tab" data-view="sprint"><b>里程碑</b><span>MILESTONE</span></button>
   <button class="tab" data-view="intel"><b>情报</b><span>INTEL</span></button>
+  <button class="tab" data-view="gloss"><b>术语</b><span>GLOSSARY</span></button>
   <button class="tab" data-view="checkin"><b>报到</b><span>DIARY</span></button>
   <button class="tab" data-view="ach"><b>成就</b><span>TROPHY</span></button>
   <button class="tab" data-view="save"><b>存档</b><span>SAVE</span></button>
@@ -171,6 +172,34 @@
     <div class="panel">
       <div class="panel-head"><h2>噪音清单</h2><span>NOISE</span></div>
       <ul class="sh-list warn" id="intelNoise"></ul>
+    </div>
+  </section>
+
+  <section class="view" id="view-gloss">
+    <div class="panel">
+      <div class="panel-head"><h2>术语速查</h2><span id="glossCount">0 / 0</span></div>
+      <p class="muted">遇到就查，查完用自己的话写一句。点一下卡片就是「已掌握」。</p>
+      <div class="gloss-tools">
+        <input id="glossSearch" class="gloss-search" placeholder="搜索英文 / 中文 / 释义…" autocomplete="off">
+      </div>
+      <div class="gloss-chips" id="glossChips"></div>
+      <div class="gloss-list" id="glossList"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>今天记这 3 个</h2><span id="glossDailyDate">—</span></div>
+      <div class="gdaily" id="glossDaily"></div>
+      <p class="hint">每天 3 个，一周 20 个，一个月吃掉入门术语。</p>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>怎么用</h2><span>HOW TO</span></div>
+      <ul class="sh-list">
+        <li>术语不是背出来的，是在关卡里用出来的——遇到就查，查完写一句自己的话。</li>
+        <li>读英文文档先抓「动词 + 对象」，别逐词翻译。</li>
+        <li>中文翻译不统一（inference 有的翻推理、有的翻推断），关键术语回英文原文确认。</li>
+        <li>标「已掌握」不是永别，两周后回来抽查一次。</li>
+      </ul>
     </div>
   </section>
 
@@ -260,6 +289,7 @@
 <script src="milestones.js"></script>
 <script src="route.js"></script>
 <script src="intel.js"></script>
+<script src="glossary.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

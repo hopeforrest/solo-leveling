@@ -28,6 +28,7 @@
       ach: {},
       settings: { sound: true },
       intel: {},
+      gloss: { known: {}, daily: {} },
       lastWorld: D.worlds[0].id,
       createdAt: Date.now(),
       updatedAt: Date.now()
@@ -57,6 +58,7 @@
     if (p.checkins) base.checkins = p.checkins;
     if (p.ach) base.ach = p.ach;
     if (p.intel) base.intel = p.intel;
+    if (p.gloss) base.gloss = p.gloss;
     Object.keys(base.worlds).forEach(function (id) {
       var src = p.worlds && p.worlds[id];
       if (!src) return;
@@ -1230,6 +1232,112 @@
     save(); sfx('tick'); renderIntel();
   }
 
+  /* ---------------- 术语 ---------------- */
+  var glossFilter = { q: '', world: 'all', known: 'all' };
+
+  function glossTerms() {
+    return (window.GLOSSARY && window.GLOSSARY.terms) || [];
+  }
+
+  function glossStageOf(sid) {
+    var loc = findStageAnywhere(sid);
+    if (!loc) return { w: '', name: '' };
+    return { w: loc.wid, name: world(loc.wid).name + ' · ' + getStage(loc.wid, sid).name };
+  }
+
+  function renderGloss() {
+    var box = $('#glossList');
+    if (!box) return;
+    if (!S.gloss) S.gloss = { known: {}, daily: {} };
+    var terms = glossTerms();
+
+    var q = (glossFilter.q || '').toLowerCase();
+    var list = terms.filter(function (t) {
+      var w = glossStageOf(t.stage).w;
+      if (glossFilter.world !== 'all' && w !== glossFilter.world) return false;
+      var known = !!S.gloss.known[t.en];
+      if (glossFilter.known === 'known' && !known) return false;
+      if (glossFilter.known === 'todo' && known) return false;
+      if (!q) return true;
+      return (t.en + ' ' + t.zh + ' ' + t.def).toLowerCase().indexOf(q) >= 0;
+    });
+
+    $('#glossCount').textContent = Object.keys(S.gloss.known).length + ' / ' + terms.length;
+
+    var worlds = [
+      { id: 'all', name: '全部' }, { id: 'cs', name: '计算机' }, { id: 'dm', name: '数字媒体' },
+      { id: 'edu', name: '素养' }, { id: 'create', name: '创作' }
+    ];
+    $('#glossChips').innerHTML =
+      worlds.map(function (w) {
+        return '<button class="chip' + (glossFilter.world === w.id ? ' on' : '') + '" data-w="' + w.id + '">' + w.name + '</button>';
+      }).join('') +
+      '<button class="chip' + (glossFilter.known === 'todo' ? ' on' : '') + '" data-k="todo">未掌握</button>' +
+      '<button class="chip' + (glossFilter.known === 'known' ? ' on' : '') + '" data-k="known">已掌握</button>';
+
+    $$('#glossChips .chip').forEach(function (b) {
+      b.addEventListener('click', function () {
+        if (b.dataset.w) { glossFilter.world = b.dataset.w; glossFilter.known = 'all'; }
+        else glossFilter.known = glossFilter.known === b.dataset.k ? 'all' : b.dataset.k;
+        sfx('tick'); renderGloss();
+      });
+    });
+
+    renderGlossDaily();
+
+    if (!list.length) {
+      box.innerHTML = '<p class="hint">没有匹配的术语，换个关键词试试。</p>';
+      return;
+    }
+    box.innerHTML = list.map(function (t) {
+      var known = !!S.gloss.known[t.en];
+      var st = glossStageOf(t.stage);
+      return '<button class="gterm' + (known ? ' on' : '') + '" data-en="' + t.en + '">' +
+        '<div class="gterm-top"><b>' + t.en + '</b><span class="gzh">' + t.zh + '</span>' +
+          '<em class="gstage">' + (st.name || '通用') + '</em></div>' +
+        '<p class="gdef">' + t.def + '</p>' +
+        '<i class="gknow">' + (known ? '已掌握' : '标记掌握') + '</i>' +
+      '</button>';
+    }).join('');
+
+    $$('#glossList .gterm').forEach(function (b) {
+      b.addEventListener('click', function () { toggleGloss(b.dataset.en); });
+    });
+  }
+
+  function renderGlossDaily() {
+    var box = $('#glossDaily');
+    if (!box) return;
+    var d = todayKey();
+    if (!S.gloss.daily || S.gloss.daily.date !== d) {
+      var pool = glossTerms().filter(function (t) { return !S.gloss.known[t.en]; });
+      if (pool.length < 3) pool = glossTerms().slice();
+      var picked = [];
+      var h = 2166136261;
+      for (var i = 0; i < d.length; i++) { h ^= d.charCodeAt(i); h = Math.imul(h, 16777619); }
+      while (picked.length < Math.min(3, pool.length)) {
+        h = Math.imul(h ^ (h >>> 13), 1274126177);
+        var t = pool[Math.abs(h) % pool.length];
+        if (picked.indexOf(t) < 0) picked.push(t);
+      }
+      S.gloss.daily = { date: d, items: picked.map(function (t) { return t.en; }) };
+      save();
+    }
+    $('#glossDailyDate').textContent = d;
+    var byEn = {};
+    glossTerms().forEach(function (t) { byEn[t.en] = t; });
+    var items = (S.gloss.daily.items || []).map(function (en) { return byEn[en]; }).filter(Boolean);
+    box.innerHTML = items.map(function (t) {
+      return '<div class="gd-card"><b>' + t.en + '</b><span>' + t.zh + '</span><p>' + t.def + '</p></div>';
+    }).join('');
+  }
+
+  function toggleGloss(en) {
+    if (!S.gloss.known) S.gloss.known = {};
+    if (S.gloss.known[en]) delete S.gloss.known[en]; else S.gloss.known[en] = true;
+    save(); sfx('tick'); renderGloss();
+  }
+
   /* ---------------- 打卡 ---------------- */
   function renderCheckin() {
     var tk = todayKey();
@@ -1360,7 +1468,7 @@
   }
 
   /* ---------------- 视图 ---------------- */
-  var VIEWS = ['map', 'sprint', 'intel', 'checkin', 'ach', 'save'];
+  var VIEWS = ['map', 'sprint', 'intel', 'gloss', 'checkin', 'ach', 'save'];
   function go(view) {
     VIEWS.forEach(function (v) {
       var el = document.getElementById('view-' + v);
@@ -1374,6 +1482,7 @@
     if (view === 'checkin') renderCheckin();
     if (view === 'sprint') renderSprint();
     if (view === 'intel') renderIntel();
+    if (view === 'gloss') renderGloss();
     if (view === 'ach') renderAch();
     if (view === 'save') renderSave();
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1399,6 +1508,11 @@
     });
 
     $('#checkinBtn').addEventListener('click', doCheckin);
+
+    $('#glossSearch').addEventListener('input', function (e) {
+      glossFilter.q = e.target.value.trim();
+      renderGloss();
+    });
 
     $('#nameInput').addEventListener('input', function (e) {
       S.player.name = (e.target.value || '').trim().slice(0, 12) || '无名猎人';
@@ -1434,6 +1548,7 @@
       if (!S.ach) S.ach = {};
       if (!S.settings) S.settings = { sound: true };
       if (!S.intel) S.intel = {};
+      if (!S.gloss) S.gloss = { known: {}, daily: {} };
       if (!S.worlds) S.worlds = {};
       D.worlds.forEach(function (w) {
         if (!S.worlds[w.id]) S.worlds[w.id] = blankWorld();

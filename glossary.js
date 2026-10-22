@@ -1,0 +1,188 @@
+/* ============================================================
+ * 术语速查：英文 → 中文 → 一句话 → 在哪一关遇到
+ * 数据独立成文件，方便你自己加词；加载顺序：glossary.js → app.js
+ * ============================================================ */
+window.GLOSSARY = {
+  note: '术语不是背出来的，是在关卡里用出来的。遇到就查，查完用自己的话写一句。',
+  terms: [
+    /* ---- 第 0 关 磨刀 ---- */
+    { en: 'shell', zh: '终端外壳', def: '命令行解释器：你输入命令，它负责执行。', stage: 'cs0' },
+    { en: 'terminal', zh: '终端', def: '敲命令的窗口，所有服务器操作都从这里开始。', stage: 'cs0' },
+    { en: 'path', zh: '路径', def: '文件在磁盘上的位置，如 /home/user/project。', stage: 'cs0' },
+    { en: 'pipe', zh: '管道', def: '把上一个命令的输出，直接交给下一个命令。', stage: 'cs0' },
+    { en: 'redirect', zh: '重定向', def: '把命令的输出写进文件，而不是打印在屏幕上。', stage: 'cs0' },
+    { en: 'repository', zh: '仓库', def: '被 Git 管理的项目文件夹，含全部历史版本。', stage: 'cs0' },
+    { en: 'commit', zh: '提交', def: '一次保存的版本记录，写清改了什么。', stage: 'cs0' },
+    { en: 'branch', zh: '分支', def: '从主线分出来的平行开发线，改坏了不影响主线。', stage: 'cs0' },
+    { en: 'merge', zh: '合并', def: '把两条分支的改动合到一起。', stage: 'cs0' },
+    { en: 'conflict', zh: '冲突', def: '两人改了同一处，Git 让你手动决定保留谁。', stage: 'cs0' },
+    { en: 'clone', zh: '克隆', def: '把远程仓库完整复制到本地。', stage: 'cs0' },
+    { en: 'push', zh: '推送', def: '把本地提交上传到远程仓库。', stage: 'cs0' },
+    { en: 'pull', zh: '拉取', def: '把远程的新提交下载到本地。', stage: 'cs0' },
+    { en: 'breakpoint', zh: '断点', def: '程序运行到这一行暂停，方便检查变量。', stage: 'cs0' },
+    { en: 'stack trace', zh: '调用栈', def: '报错时显示「谁调用了谁」的清单，从下往上读。', stage: 'cs0' },
+    { en: 'environment variable', zh: '环境变量', def: '系统级配置，常用来存 API Key，不写进代码。', stage: 'cs0' },
+
+    /* ---- 第 1 关 开口 ---- */
+    { en: 'variable', zh: '变量', def: '给一个数据起的名字。', stage: 'cs1' },
+    { en: 'function', zh: '函数', def: '可重复调用的一段逻辑，有输入和输出。', stage: 'cs1' },
+    { en: 'loop', zh: '循环', def: '让一段代码重复执行。', stage: 'cs1' },
+    { en: 'array', zh: '数组', def: '按顺序排列的一组值，用下标访问。', stage: 'cs1' },
+    { en: 'dictionary', zh: '字典', def: '键值对集合，用 key 查 value。', stage: 'cs1' },
+    { en: 'module', zh: '模块', def: '可以被 import 的代码文件。', stage: 'cs1' },
+    { en: 'package', zh: '包', def: '可以安装的第三方代码库。', stage: 'cs1' },
+    { en: 'pip', zh: '包管理器', def: 'Python 安装第三方包的工具。', stage: 'cs1' },
+    { en: 'venv', zh: '虚拟环境', def: '给每个项目隔离依赖，避免版本打架。', stage: 'cs1' },
+    { en: 'exception', zh: '异常', def: '运行时抛出的错误对象，要捕获或上报。', stage: 'cs1' },
+    { en: 'JSON', zh: 'JSON 格式', def: '键值对结构的文本数据格式，API 最常用。', stage: 'cs1' },
+    { en: 'API', zh: '接口', def: '程序之间约定好的调用方式。', stage: 'cs1' },
+    { en: 'API key', zh: '接口密钥', def: '调用 API 的凭证，绝不能提交到仓库。', stage: 'cs1' },
+    { en: 'request / response', zh: '请求 / 响应', def: '你发出去的问，和服务端返回的答。', stage: 'cs1' },
+
+    /* ---- 第 2 关 思考 ---- */
+    { en: 'data structure', zh: '数据结构', def: '组织数据的方式，决定操作快慢。', stage: 'cs2' },
+    { en: 'algorithm', zh: '算法', def: '解决问题的步骤。', stage: 'cs2' },
+    { en: 'linked list', zh: '链表', def: '靠指针串起来的节点序列。', stage: 'cs2' },
+    { en: 'stack', zh: '栈', def: '后进先出，像一摞盘子。', stage: 'cs2' },
+    { en: 'queue', zh: '队列', def: '先进先出，像排队。', stage: 'cs2' },
+    { en: 'hash table', zh: '哈希表', def: '用哈希函数做到近似 O(1) 查找。', stage: 'cs2' },
+    { en: 'tree', zh: '树', def: '层级结构，二叉树是最常见的一种。', stage: 'cs2' },
+    { en: 'graph', zh: '图', def: '节点和边组成的网络，社交关系就是图。', stage: 'cs2' },
+    { en: 'recursion', zh: '递归', def: '函数调用自己，必须有终止条件。', stage: 'cs2' },
+    { en: 'binary search', zh: '二分查找', def: '每次砍掉一半范围的查找。', stage: 'cs2' },
+    { en: 'sorting', zh: '排序', def: '把数据按顺序排好。', stage: 'cs2' },
+    { en: 'BFS / DFS', zh: '广度 / 深度优先', def: '遍历图的两种顺序：一层一层，或一条路走到底。', stage: 'cs2' },
+    { en: 'dynamic programming', zh: '动态规划', def: '用子问题的答案拼出大问题的答案。', stage: 'cs2' },
+    { en: 'complexity', zh: '复杂度', def: '衡量算法随数据规模增长的开销。', stage: 'cs2' },
+    { en: 'Big-O', zh: '大 O 记号', def: '描述增长上界的记号，如 O(n log n)。', stage: 'cs2' },
+
+    /* ---- 第 3 关 看见机器 ---- */
+    { en: 'memory', zh: '内存', def: '程序运行时存放数据的地方。', stage: 'cs3' },
+    { en: 'pointer', zh: '指针', def: '存地址的变量，指向内存中的某个位置。', stage: 'cs3' },
+    { en: 'stack frame', zh: '栈帧', def: '函数调用时在栈上分配的一块空间。', stage: 'cs3' },
+    { en: 'register', zh: '寄存器', def: 'CPU 内部最快的存储单元。', stage: 'cs3' },
+    { en: 'assembly', zh: '汇编', def: '贴近机器的低级语言，一条指令对应一个操作。', stage: 'cs3' },
+    { en: 'process', zh: '进程', def: '运行中的程序实例，有独立内存空间。', stage: 'cs3' },
+    { en: 'thread', zh: '线程', def: '进程内部可以并行执行的流。', stage: 'cs3' },
+    { en: 'context switch', zh: '上下文切换', def: 'CPU 从一个线程换到另一个线程执行。', stage: 'cs3' },
+    { en: 'virtual memory', zh: '虚拟内存', def: '让每个进程以为自己独占整块内存。', stage: 'cs3' },
+    { en: 'cache', zh: '缓存', def: '把常用数据放在更快的地方。', stage: 'cs3' },
+    { en: 'page', zh: '页', def: '虚拟内存划分的固定大小块，常见 4KB。', stage: 'cs3' },
+    { en: 'syscall', zh: '系统调用', def: '程序请求内核干活的入口，如读写文件。', stage: 'cs3' },
+    { en: 'file descriptor', zh: '文件描述符', def: '打开文件后系统给你的编号。', stage: 'cs3' },
+    { en: 'buffer overflow', zh: '缓冲区溢出', def: '写数据超出边界，经典安全漏洞。', stage: 'cs3' },
+
+    /* ---- 第 4 关 造东西 ---- */
+    { en: 'backend', zh: '后端', def: '服务器上的业务逻辑和数据处理。', stage: 'cs4' },
+    { en: 'frontend', zh: '前端', def: '用户能看到、能点的界面。', stage: 'cs4' },
+    { en: 'database', zh: '数据库', def: '持久化保存数据的系统。', stage: 'cs4' },
+    { en: 'SQL', zh: 'SQL 语言', def: '操作关系型数据库的查询语言。', stage: 'cs4' },
+    { en: 'index', zh: '索引', def: '加速查询的数据结构，像书的目录。', stage: 'cs4' },
+    { en: 'JOIN', zh: '连接', def: '把多张表按关联字段拼在一起查。', stage: 'cs4' },
+    { en: 'transaction', zh: '事务', def: '要么全成功、要么全失败的一组操作。', stage: 'cs4' },
+    { en: 'Docker', zh: 'Docker', def: '把应用和依赖打包成容器，到哪都能跑。', stage: 'cs4' },
+    { en: 'container', zh: '容器', def: '隔离的运行环境，比虚拟机轻。', stage: 'cs4' },
+    { en: 'deployment', zh: '部署', def: '让程序在服务器上跑起来，别人能访问。', stage: 'cs4' },
+    { en: 'HTTPS', zh: 'HTTPS', def: '加密后的 HTTP，浏览器地址栏的小锁。', stage: 'cs4' },
+    { en: 'load test', zh: '压测', def: '用大量并发请求测服务能扛多少。', stage: 'cs4' },
+
+    /* ---- 第 5 关 变职业 ---- */
+    { en: 'code review', zh: '代码评审', def: '让别人读你的代码找问题。', stage: 'cs5' },
+    { en: 'CI/CD', zh: '持续集成 / 交付', def: '自动跑测试、自动部署的流水线。', stage: 'cs5' },
+    { en: 'unit test', zh: '单元测试', def: '针对小函数的自动测试。', stage: 'cs5' },
+    { en: 'refactor', zh: '重构', def: '不改变行为，只整理代码结构。', stage: 'cs5' },
+    { en: 'pull request', zh: '合并请求', def: '请别人评审你的分支，然后合进主线。', stage: 'cs5' },
+
+    /* ---- 数媒：环境 ---- */
+    { en: 'GPU', zh: '显卡', def: '擅长大规模并行计算的芯片。', stage: 'dm0' },
+    { en: 'VRAM', zh: '显存', def: '显卡上的内存，决定能跑多大的模型。', stage: 'dm0' },
+    { en: 'CUDA', zh: 'CUDA 平台', def: 'NVIDIA 的 GPU 计算平台，装错版本是时间黑洞。', stage: 'dm0' },
+    { en: 'OOM', zh: '显存溢出', def: '显存不够时报的错，先降分辨率或换量化。', stage: 'dm0' },
+    { en: 'tensor', zh: '张量', def: '多维数组，模型计算的基本单位。', stage: 'dm0' },
+
+    /* ---- 数媒：脚本 ---- */
+    { en: 'prompt', zh: '提示词', def: '你给模型的输入描述。', stage: 'dm1' },
+    { en: 'seed', zh: '随机种子', def: '固定它就能复现同一张图。', stage: 'dm1' },
+    { en: 'batch', zh: '批', def: '一次处理的一组数据。', stage: 'dm1' },
+
+    /* ---- 数媒：原理 ---- */
+    { en: 'diffusion', zh: '扩散模型', def: '从纯噪声一步步去噪生成图像。', stage: 'dm2' },
+    { en: 'latent space', zh: '潜空间', def: '压缩后的低维表示空间，扩散在这里算得更快。', stage: 'dm2' },
+    { en: 'VAE', zh: '变分自编码器', def: '把图像压进潜空间、再还原回像素。', stage: 'dm2' },
+    { en: 'UNet', zh: 'UNet', def: '扩散模型最常用的去噪网络结构。', stage: 'dm2' },
+    { en: 'DiT', zh: '扩散 Transformer', def: '用 Transformer 做扩散的架构，Flux 系在用。', stage: 'dm2' },
+    { en: 'CFG', zh: '无分类器引导', def: '控制模型多「听话」的强度，太高会崩。', stage: 'dm2' },
+    { en: 'sampler', zh: '采样器', def: '去噪时用的具体算法，决定步数和质感。', stage: 'dm2' },
+    { en: 'loss', zh: '损失', def: '模型错得有多离谱的数值。', stage: 'dm2' },
+    { en: 'gradient', zh: '梯度', def: '参数该往哪个方向调的指示。', stage: 'dm2' },
+    { en: 'backpropagation', zh: '反向传播', def: '从输出往回算每个参数的梯度。', stage: 'dm2' },
+    { en: 'epoch', zh: '轮次', def: '把整个数据集完整看一遍。', stage: 'dm2' },
+    { en: 'learning rate', zh: '学习率', def: '每次调参的步长，太大不收敛、太小太慢。', stage: 'dm2' },
+    { en: 'overfitting', zh: '过拟合', def: '训练集表现很好，新数据一塌糊涂。', stage: 'dm2' },
+    { en: 'checkpoint', zh: '检查点', def: '训练过程中保存的模型快照。', stage: 'dm2' },
+    { en: 'fine-tuning', zh: '微调', def: '在已有模型上继续训练，让它更懂你的数据。', stage: 'dm3' },
+
+    /* ---- 数媒：管线 ---- */
+    { en: 'ComfyUI', zh: 'ComfyUI', def: '节点式的图像生成工作流工具。', stage: 'dm3' },
+    { en: 'node', zh: '节点', def: '工作流里的一个处理单元。', stage: 'dm3' },
+    { en: 'workflow', zh: '工作流', def: '把节点连起来的一条管线。', stage: 'dm3' },
+    { en: 'ControlNet', zh: 'ControlNet', def: '用深度、边缘等条件精确控制构图。', stage: 'dm3' },
+    { en: 'IP-Adapter', zh: 'IP-Adapter', def: '用参考图控制风格或人物一致性。', stage: 'dm3' },
+    { en: 'inpainting', zh: '局部重绘', def: '只重画指定的区域。', stage: 'dm3' },
+    { en: 'upscaling', zh: '超分', def: '把小图放大并补出细节。', stage: 'dm3' },
+    { en: 'render pass', zh: '渲染通道', def: '单独输出深度、法线等图层，喂给模型。', stage: 'dm3' },
+    { en: 'depth map', zh: '深度图', def: '每个像素到相机的距离。', stage: 'dm3' },
+    { en: 'PBR', zh: '基于物理的渲染', def: '按真实光照规律渲染材质。', stage: 'dm3' },
+    { en: 'shader', zh: '着色器', def: '在 GPU 上算颜色的程序。', stage: 'dm3' },
+    { en: '3DGS', zh: '3D 高斯泼溅', def: '用大量高斯点重建三维场景。', stage: 'dm3' },
+
+    /* ---- 数媒：上线 ---- */
+    { en: 'FastAPI', zh: 'FastAPI', def: 'Python 后端框架，出接口最快。', stage: 'dm4' },
+    { en: 'Gradio', zh: 'Gradio', def: '几行代码给模型搭一个网页界面。', stage: 'dm4' },
+    { en: 'quantization', zh: '量化', def: '用更低精度压小模型，换显存和速度。', stage: 'dm4' },
+    { en: 'fp16 / int4', zh: '浮点 16 位 / 整数 4 位', def: '常见精度格式，数字越小越省显存。', stage: 'dm4' },
+    { en: 'throughput', zh: '吞吐', def: '单位时间能处理多少请求。', stage: 'dm4' },
+    { en: 'latency', zh: '延迟', def: '单次请求要等多久。', stage: 'dm4' },
+    { en: 'rate limit', zh: '限流', def: '限制调用频率，防止被白嫖。', stage: 'dm4' },
+    { en: 'sRGB / gamma', zh: '色彩空间 / 伽马', def: '显示器的颜色编码方式，90% 的颜色事故在这。', stage: 'dm4' },
+    { en: 'ACES', zh: 'ACES 色彩流程', def: '影视调色用的色彩管理标准。', stage: 'dm4' },
+
+    /* ---- 数媒副线 ---- */
+    { en: 'rasterization', zh: '光栅化', def: '把三角形画成屏幕上的像素。', stage: 'dma' },
+    { en: 'color space', zh: '色彩空间', def: '颜色如何用数值表示，转换错了颜色就发灰。', stage: 'dma' },
+    { en: 'normal map', zh: '法线图', def: '记录表面朝向的贴图。', stage: 'dma' },
+    { en: 'NeRF', zh: '神经辐射场', def: '用神经网络表示三维场景。', stage: 'dma' },
+    { en: 'LUT', zh: '查找表', def: '调色预设的映射表。', stage: 'dmb' },
+    { en: 'LUFS', zh: '响度单位', def: '平台响度标准，B 站大约 -14 LUFS。', stage: 'dmb' },
+
+    /* ---- LLM 与 Agent ---- */
+    { en: 'token', zh: '词元', def: '文本切分的最小单位，计费和上下文都按它算。', stage: 'dmai' },
+    { en: 'context window', zh: '上下文窗口', def: '一次最多能输入多长，2026 年旗舰普遍 1M。', stage: 'dmai' },
+    { en: 'pretraining', zh: '预训练', def: '在海量语料上学世界知识。', stage: 'dmai' },
+    { en: 'post-training', zh: '后训练', def: '指令微调与偏好对齐，教模型听话。', stage: 'dmai' },
+    { en: 'RLHF', zh: '人类反馈强化学习', def: '按人类偏好调整模型行为。', stage: 'dmai' },
+    { en: 'reasoning', zh: '推理能力', def: '先想再答的能力，复杂任务更准。', stage: 'dmai' },
+    { en: 'chain-of-thought', zh: '思维链', def: '让模型把推理步骤写出来再作答。', stage: 'dmai' },
+    { en: 'inference', zh: '推理（跑模型）', def: '模型生成回答的过程，不是训练。', stage: 'dmai' },
+    { en: 'KV cache', zh: '键值缓存', def: '缓存历史计算，加速长对话生成。', stage: 'dmai' },
+    { en: 'prefill / decode', zh: '预填充 / 解码', def: '生成的两个阶段：先读输入，再逐字输出。', stage: 'dmai' },
+    { en: 'speculative decoding', zh: '推测解码', def: '小模型先起草，大模型批量校验，加速生成。', stage: 'dmai' },
+    { en: 'RAG', zh: '检索增强生成', def: '先检索你的资料，再让模型基于资料回答。', stage: 'dmai' },
+    { en: 'embedding', zh: '向量嵌入', def: '把文本变成一串数字，便于计算相似度。', stage: 'dmai' },
+    { en: 'vector database', zh: '向量数据库', def: '按相似度检索向量的数据库。', stage: 'dmai' },
+    { en: 'agent', zh: '智能体', def: '会调用工具、多步完成任务的 AI 系统。', stage: 'dmai' },
+    { en: 'tool calling', zh: '工具调用', def: '模型调用外部函数、搜索或计算。', stage: 'dmai' },
+    { en: 'MCP', zh: '模型上下文协议', def: '让模型接外部工具的开放标准。', stage: 'dmai' },
+    { en: 'MoE', zh: '混合专家', def: '只激活部分参数，参数大但算力省。', stage: 'dmai' },
+    { en: 'benchmark', zh: '基准评测', def: '标准化的考试分数，横向比较模型用。', stage: 'dmai' },
+    { en: 'hallucination', zh: '幻觉', def: '模型一本正经地编造事实。', stage: 'dmai' },
+    { en: 'temperature', zh: '温度参数', def: '控制输出的随机性，越高越发散。', stage: 'dmai' },
+
+    /* ---- 素养 / 创作 ---- */
+    { en: 'IELTS', zh: '雅思', def: '英语能力考试，口语和写作是重点。', stage: 'e1' },
+    { en: 'shadowing', zh: '影子跟读', def: '落后原音 1–2 秒同步复述，练听力和口腔肌肉。', stage: 'e1' },
+    { en: 'hook', zh: '钩子', def: '视频前 5 秒留住人的设计。', stage: 'u2' },
+    { en: 'CTR', zh: '点击率', def: '看到的人里有多少点进来。', stage: 'u4' },
+    { en: 'retention', zh: '完播 / 留存', def: '观众看了多久，B 站推荐的核心指标。', stage: 'u4' }
+  ]
+};

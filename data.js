@@ -6,7 +6,7 @@ window.GAME_DATA = {
   meta: {
     title: '学习任务',
     subtitle: 'LEARNING QUEST',
-    tag: 'V1.1',
+    tag: 'V1.2',
     note: '每一关都必须有能拿给别人看的东西'
   },
 
